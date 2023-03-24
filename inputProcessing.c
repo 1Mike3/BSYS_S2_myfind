@@ -4,12 +4,9 @@
 
 #include "inputProcessing.h"
 #include <stdio.h>
-#include <unistd.h>
-#include <stdlib.h>
 #include <string.h>
 #include <stdbool.h>
 
-//TODO change magic numbers to constants
 
 // myfind [starting point] [expression]
 
@@ -20,11 +17,12 @@
 int getStartingPointAndExpression(int argumentCount, char ** argumentVector){
 
                 //Vars and Const
-       //actual Values of the expression
+       //actual Values of the parameters, if not there left 0
     char startingPoint[MAXCAHRSPAR1] = {};
     char expression[MAXCHARSPAR2] = {};
     char expressionParameter[MAXCHARSPAR3] = {};
 
+    //the possible expressions and their count, so they can be checked in a loop
     const short expressionCount = 4;
     const char possibleExpressions[10][10] = {
         "-print",
@@ -52,16 +50,16 @@ int getStartingPointAndExpression(int argumentCount, char ** argumentVector){
     int lengthArgThree = 0;
 
     //check if every entery not too long, if so don't try to reed in unassigned location
-    if(argumentCount >= 2)
+        if(argumentCount >= 2)
     lengthArgOne = (int)strlen(*(argumentVector+1));
 
-    if(argumentCount >= 3)
+        if(argumentCount >= 3)
     lengthArgTwo = (int)strlen(*(argumentVector+2));
 
-    if(argumentCount >= 4)
+        if(argumentCount >= 4)
     lengthArgThree = (int)strlen(*(argumentVector+3));
 
-    if(lengthArgOne >= MAXCAHRSPAR1 || lengthArgTwo >= MAXCHARSPAR2 || lengthArgThree >= MAXCHARSPAR3){
+     if(lengthArgOne >= MAXCAHRSPAR1 || lengthArgTwo >= MAXCHARSPAR2 || lengthArgThree >= MAXCHARSPAR3){
         fprintf(stderr, "ERROR: too long Parameters!\n");
         return -1;
     }
@@ -89,32 +87,31 @@ int getStartingPointAndExpression(int argumentCount, char ** argumentVector){
 
         // because first argument is not path so must be argument, write argument first parameter
 
-        if(argumentCount >= 2)
-        strcpy(expression, *(argumentVector+1));
+         if(argumentCount >= PARAMETERSAFEGUARD1)
+        strcpy(expression, *(argumentVector+PARAMETERINDEX1));
 
         // same logic for the following argument
 
-       if(argumentCount >= 3)
-       strcpy(expressionParameter, *(argumentVector+2));
+         if(argumentCount >= PARAMETERSAFEGUARD2)
+       strcpy(expressionParameter, *(argumentVector+PARAMETERINDEX2));
 
         printf("No Path detected, Path is: %s\n", startingPoint);
         //Path was detected as the first Parameter
     } else{
         //the first Parameter is the assumed Path, not checked for correctness
 
-        if(argumentCount >= 2)
-        strcpy(startingPoint, *(argumentVector+1));
+            if(argumentCount >= PARAMETERSAFEGUARD1)
+        strcpy(startingPoint, *(argumentVector+PARAMETERINDEX1));
 
         //same logic for the expression and its Parameter:
 
-        if(argumentCount >= 3)
-        strcpy(expression, *(argumentVector+2));
+             if(argumentCount >= PARAMETERSAFEGUARD2)
+        strcpy(expression, *(argumentVector+PARAMETERINDEX2));
 
-        if(argumentCount >= 4)
-        strcpy(expressionParameter, *(argumentVector+3));
+            if(argumentCount >= PARAMETERSAFEGUARD3)
+        strcpy(expressionParameter, *(argumentVector+PARAMETERINDEX3));
 
-
-        printf("Path detected path is: %s\n", startingPoint);
+            printf("Path detected path is: %s\n", startingPoint);
     }
 
 

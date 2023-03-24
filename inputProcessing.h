@@ -10,6 +10,15 @@
 #define MAXCHARSPAR2 128
 #define MAXCHARSPAR3 128
 
+#define PARAMETERINDEX1 1
+#define PARAMETERINDEX2 2
+#define PARAMETERINDEX3 3
+
+#define PARAMETERSAFEGUARD1 2
+#define PARAMETERSAFEGUARD2 3
+#define PARAMETERSAFEGUARD3 4
+
+
 int getStartingPointAndExpression(int argumentCount, char ** argumentVector);
 
 #endif //FIND_SIMPLIFIED_INPUTPROCESSING_H
