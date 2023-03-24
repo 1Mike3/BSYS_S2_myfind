@@ -5,16 +5,16 @@
 #include "inputProcessing.h"
 #include <stdio.h>
 #include <string.h>
-#include <stdbool.h>
 
 
+//TODO add functionality for further expressions and tests
 // myfind [starting point] [expression]
 
 //return Values
 //successful return 0
 //unsuccessful return -1
 
-int getStartingPointAndExpression(int argumentCount, char ** argumentVector){
+int getStartingPointAndExpression(int argumentCount, char ** argumentVector, parameterData *parameters){
 
                 //Vars and Const
        //actual Values of the parameters, if not there left 0
@@ -41,7 +41,8 @@ int getStartingPointAndExpression(int argumentCount, char ** argumentVector){
     //if the first expression is no standard expression path is assumed
     bool pathNotDetected = false;
 
-
+    //argument counter to count the processed Information
+    int processedArguments = 1; //one because of firs one prog name
 
 
                                   //check IF NOT too MANY CHARS entered
@@ -132,7 +133,7 @@ int getStartingPointAndExpression(int argumentCount, char ** argumentVector){
     printf("This Should be the Expression: %s \n", expression);
     printf("This Should be the Expression Parameter: %s \n", expressionParameter);
 
-
+// if i got to this point i will copy the Values into the Parameters
 
 
     return 0;

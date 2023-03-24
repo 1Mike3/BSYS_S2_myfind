@@ -10,7 +10,11 @@
 
 int main(int argc, char ** argv) {
     //printf("Hello, World!\n");
-    if( 0 > getStartingPointAndExpression(argc, argv) ){
+
+    //central location where the User Parameters are held
+    parameterData parameters = {};
+
+    if( 0 > getStartingPointAndExpression(argc, argv, &parameters) ){
         printf("Program shutting down\n");
         return -1;
     }

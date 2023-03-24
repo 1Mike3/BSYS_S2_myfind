@@ -5,4 +5,4 @@ set(CMAKE_C_STANDARD 99)
 
 
 
-add_executable(myfind main.c findFunctionality.c findFunctionality.h inputProcessing.c inputProcessing.h)
+add_executable(myfind main.c findFunctionality.c findFunctionality.h inputProcessing.c inputProcessing.h expressionFunctions.c expressionFunctions.h)
