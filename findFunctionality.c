@@ -15,7 +15,7 @@
 
 #define DEBUGF 1
 
-int makeListOfAllObjects(char readOutFileNames[FILECOUNTLIMIT][FILENAMESIZELIMIT], const int maxFilenameCount, const int maxFileNameSize,parameterData parameters){
+int makeDirectoryObjectsList(char readOutFileNames[FILECOUNTLIMIT][FILENAMESIZELIMIT], const int maxFilenameCount, const int maxFileNameSize, parameterData parameters){
 
 #if DEBUGF
     //just wrote random garbage into array to test something
@@ -54,20 +54,19 @@ struct dirent *dd = NULL; // Directory Data
         while (((dd = readdir( dir)) != NULL)) //check if an element could be read
 
             if(dd->d_name[0] != 0){ //check if the entry is empty before copying it
-                tempLength = (int)strlen(dd->d_name);
+                tempLength = (int)strlen(dd->d_name); // seecond snaity check if really empty
                 if(tempLength != 0){
-                    strcpy(readOutFileNames[i], dd->d_name);
+                    strcpy(readOutFileNames[i], dd->d_name); //copy to array and increase array index
                     i++;
                 } else {
-                    break;
+                    break;// conditon to break the loop if templength = 0
                 }
 
             } else{
-                break; //second condition to break the loop, kinda unnecessary but better safe then sorry
+                break; //condition to break the loop if first byte of ddname empty
             }
 
-        // if all above goes well:
-        //copy the contents into the mult. array
+
    }
 //if closedir does not return >0 print error and exit
     if(0 != closedir(dir)){

@@ -17,7 +17,7 @@
 //unsuccessful return -1
 
 //TODO well should have read the assignmment correctly i will need to adapt this ...
-int getStartingPointAndExpression(int argumentCount, char ** argumentVector, parameterData *parameters){
+int ProcessParameterData(int argumentCount, char ** argumentVector, parameterData *parameters){
 
     //the possible expressions and their count, so they can be checked in a loop
     const short expressionCount = 4;

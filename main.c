@@ -25,23 +25,24 @@ void helperPrintMultidimensionalStringArray(char charArray[FILECOUNTLIMIT][FILEN
 
 
 int main(int argc, char ** argv) {
-    //printf("Hello, World!\n");
 
-    //central location where the User Parameters are held
+    //central location where the (currently processed) User Parameters are held
     parameterData parameters = {};
+    parameters.totalArgumentCount = (short)argc;
+    parameters.totalProcessedParameters = 1; //so that the first argument(progName) is always counted.
 
-    if( 0 > getStartingPointAndExpression(argc, argv, &parameters) ){
+
+    //Reading out of the first Parameter Data and checking if it returned an error
+    if(0 > ProcessParameterData(argc, argv, &parameters) ){
         printf("Program shutting down\n");
         return -1;
     }
 
-    //read through all the files and read them out into a multiDimensionalCharArray
-
-
+    //read through all the for the current directory in Pars and read them out into a multiDimensionalCharArray
     char readOutNames[FILECOUNTLIMIT][FILENAMESIZELIMIT] = {};
+    makeDirectoryObjectsList(readOutNames, FILECOUNTLIMIT, FILENAMESIZELIMIT, parameters);
 
-    makeListOfAllObjects(readOutNames, FILECOUNTLIMIT, FILENAMESIZELIMIT,parameters);
-
+    //helper function to Print the names Array to the console for easier overview for me
     helperPrintMultidimensionalStringArray(readOutNames, FILECOUNTLIMIT, FILENAMESIZELIMIT);
 
 

@@ -22,18 +22,15 @@
 
 typedef struct ParameterData {
         char searchPathStart[128];
-        bool searchPathStartAvailable;
-        bool searchPathStartValid;
         char expression[128];
-        bool expressionAvailable;
-        bool expressionValid;
+        bool expressionParReq;
         char expressionParameter[128];
-        bool expressionParameterAvailable;
-        bool expressionParameterValid;
+        short totalArgumentCount; //Both so can detect if should process the par function again after first run
+        short totalProcessedParameters;
 }parameterData ;
 
 
-int getStartingPointAndExpression(int argumentCount, char ** argumentVector, parameterData *parameters);
+int ProcessParameterData(int argumentCount, char ** argumentVector, parameterData *parameters);
 
 #endif //FIND_SIMPLIFIED_INPUTPROCESSING_H
 

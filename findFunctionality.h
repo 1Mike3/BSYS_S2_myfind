@@ -10,6 +10,6 @@
 #define FILECOUNTLIMIT 50
 #define FILENAMESIZELIMIT 128
 
-int makeListOfAllObjects(char readOutFileNames[FILECOUNTLIMIT][FILENAMESIZELIMIT], const int maxFilenameCount, const int maxFileNameSize, parameterData parameters);
+int makeDirectoryObjectsList(char readOutFileNames[FILECOUNTLIMIT][FILENAMESIZELIMIT], const int maxFilenameCount, const int maxFileNameSize, parameterData parameters);
 
 #endif //FIND_SIMPLIFIED_FINDFUNCTIONALITY_H
