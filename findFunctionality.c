@@ -10,9 +10,16 @@
 #include <stdio.h>
 #include <unistd.h>
 #include <stdlib.h>
+#include <string.h>
+#include <errno.h>
 
-int makeListOfAllObjects(char readOurFileNames[FILECOUNTLIMIT][FILENAMESIZELIMIT], const int maxFilenameCount, const int maxFileNameSize,parameterData parameters){
-/*
+#define DEBUGF 1
+
+int makeListOfAllObjects(char readOutFileNames[FILECOUNTLIMIT][FILENAMESIZELIMIT], const int maxFilenameCount, const int maxFileNameSize,parameterData parameters){
+
+#if DEBUGF
+    //just wrote random garbage into array to test something
+    /*
     readOurFileNames[0][0] = 'a';
     readOurFileNames[0][1] = '\0';
 
@@ -22,31 +29,48 @@ int makeListOfAllObjects(char readOurFileNames[FILECOUNTLIMIT][FILENAMESIZELIMIT
     readOurFileNames[1][3] = '\0';
 */
 
+#endif
+
 DIR * dir;
 struct dirent *dd = NULL; // Directory Data
 
 
 //open the directory from the parameters, if not valid throw error and exit
+
     dir = opendir(parameters.searchPathStart);
-
-
+#if DEBUGF
+    printf("Parameter Opening: %s  \n", parameters.searchPathStart);
+    printf("Dir Value: %p\n", dir);
+    perror("Error Value: ");
+#endif
     if (dir <= 0){
        fprintf(stderr,"ERROR opening \"Path\" Directory!\n");
        exit(-1);
    } else{
 
         //loop to read out the data from the directory into the array
-        int i = 0;
-        while ((dd ))
-      dd = readdir( dir);
+        int tempLength = 0; // helper for checking if directory length = 0;
+        int i = 0; //counter for the index of the FilenamesArray
+        while (((dd = readdir( dir)) != NULL)) //check if an element could be read
 
+            if(dd->d_name[0] != 0){ //check if the entry is empty before copying it
+                tempLength = (int)strlen(dd->d_name);
+                if(tempLength != 0){
+                    strcpy(readOutFileNames[i], dd->d_name);
+                    i++;
+                } else {
+                    break;
+                }
 
+            } else{
+                break; //second condition to break the loop, kinda unnecessary but better safe then sorry
+            }
 
-
-        i++;
+        // if all above goes well:
+        //copy the contents into the mult. array
    }
 //if closedir does not return >0 print error and exit
-    if(!closedir(dir)){
+    if(0 != closedir(dir)){
         fprintf(stderr,"ERROR closing \"Path\" Directory!\n");
         exit(-1);
     }

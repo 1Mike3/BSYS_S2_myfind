@@ -6,6 +6,7 @@
 #include <stdio.h>
 #include <string.h>
 
+#define DEBUGI 1
 
 //TODO add functionality for further expressions and tests
 
@@ -15,14 +16,8 @@
 //successful return 0
 //unsuccessful return -1
 
-//TODO well should have read the assignmment  correctly i will need to adapt this ...
+//TODO well should have read the assignmment correctly i will need to adapt this ...
 int getStartingPointAndExpression(int argumentCount, char ** argumentVector, parameterData *parameters){
-
-                //Vars and Const
-       //actual Values of the parameters, if not there left 0
-    char startingPoint[MAXCAHRSPAR1] = {};
-    char expression[MAXCHARSPAR2] = {};
-    char expressionParameter[MAXCHARSPAR3] = {};
 
     //the possible expressions and their count, so they can be checked in a loop
     const short expressionCount = 4;
@@ -45,6 +40,14 @@ int getStartingPointAndExpression(int argumentCount, char ** argumentVector, par
 
     //argument counter to count the processed Information
     int processedArguments = 1; //one because of firs one prog name
+
+
+                                    //check IF ENOUGH PARAMETERS
+
+                                    if(argumentCount == 1){
+                                        fprintf(stderr, "ERROR: no Parameters submitted!\n");
+                                        return -1;
+                                    }
 
 
                                   //check IF NOT too MANY CHARS entered
@@ -85,57 +88,48 @@ int getStartingPointAndExpression(int argumentCount, char ** argumentVector, par
     if(pathNotDetected == true){
 
         // no path was entered so write home directory as starting directory
-        startingPoint[0] = '.';
-        startingPoint[1] = '\0';
+        parameters->searchPathStart[0] = '.';
+        parameters->searchPathStart[1] = '/';
+        parameters->searchPathStart[1] = '\0';
 
         // because first argument is not path so must be argument, write argument first parameter
 
          if(argumentCount >= PARAMETERSAFEGUARD1)
-        strcpy(expression, *(argumentVector+PARAMETERINDEX1));
+        strcpy(parameters->expression, *(argumentVector+PARAMETERINDEX1));
 
         // same logic for the following argument
 
          if(argumentCount >= PARAMETERSAFEGUARD2)
-       strcpy(expressionParameter, *(argumentVector+PARAMETERINDEX2));
-
-        printf("No Path detected, Path is: %s\n", startingPoint);
+       strcpy(parameters->expressionParameter, *(argumentVector+PARAMETERINDEX2));
+#if DEBUGI
+        printf("No Path detected, Path is: %s\n", parameters->searchPathStart);
+#endif
         //Path was detected as the first Parameter
     } else{
         //the first Parameter is the assumed Path, not checked for correctness
 
             if(argumentCount >= PARAMETERSAFEGUARD1)
-        strcpy(startingPoint, *(argumentVector+PARAMETERINDEX1));
+        strcpy(parameters->searchPathStart, *(argumentVector+PARAMETERINDEX1));
 
         //same logic for the expression and its Parameter:
 
              if(argumentCount >= PARAMETERSAFEGUARD2)
-        strcpy(expression, *(argumentVector+PARAMETERINDEX2));
+        strcpy(parameters->expression, *(argumentVector+PARAMETERINDEX2));
 
             if(argumentCount >= PARAMETERSAFEGUARD3)
-        strcpy(expressionParameter, *(argumentVector+PARAMETERINDEX3));
-
-            printf("Path detected path is: %s\n", startingPoint);
+        strcpy(parameters->expressionParameter, *(argumentVector+PARAMETERINDEX3));
+#if DEBUGI
+            printf("Path detected path is: %s\n", parameters->searchPathStart);
+#endif
     }
 
 
 
-
-
-/*
-    //Note to self: read the assignment before writing code...
-    //check if correct number of Parameters entered:
-    if(argumentCount != 3){
-        fprintf(stderr, "ERROR incorrect amount of Parameters!\n");
-        return -1;
-    }
-*/
-
-
-    printf("This Should be the Starting Point: %s \n", startingPoint);
-    printf("This Should be the Expression: %s \n", expression);
-    printf("This Should be the Expression Parameter: %s \n", expressionParameter);
-
-// if i got to this point i will copy the Values into the Parameters
+#if DEBUGI
+    printf("This Should be the Starting Point: %s \n", parameters->searchPathStart);
+    printf("This Should be the Expression: %s \n", parameters->expression);
+    printf("This Should be the Expression Parameter: %s \n", parameters->expressionParameter);
+#endif
 
 
     return 0;

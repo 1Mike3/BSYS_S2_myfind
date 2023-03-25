@@ -8,7 +8,7 @@
 #include "findFunctionality.h"
 #include "inputProcessing.h"
 #include "expressionFunctions.h"
-
+#define DEBUGM 1
 
 void helperPrintMultidimensionalStringArray(char charArray[FILECOUNTLIMIT][FILENAMESIZELIMIT], int lineCount, int rowCount ){
     for (int i = 0; i < lineCount; ++i){
