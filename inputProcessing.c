@@ -8,12 +8,14 @@
 
 
 //TODO add functionality for further expressions and tests
+
 // myfind [starting point] [expression]
 
 //return Values
 //successful return 0
 //unsuccessful return -1
 
+//TODO well should have read the assignmment  correctly i will need to adapt this ...
 int getStartingPointAndExpression(int argumentCount, char ** argumentVector, parameterData *parameters){
 
                 //Vars and Const

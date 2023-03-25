@@ -7,6 +7,22 @@
 //My Headers
 #include "findFunctionality.h"
 #include "inputProcessing.h"
+#include "expressionFunctions.h"
+
+
+void helperPrintMultidimensionalStringArray(char charArray[FILECOUNTLIMIT][FILENAMESIZELIMIT], int lineCount, int rowCount ){
+    for (int i = 0; i < lineCount; ++i){
+
+        if(charArray[i][0] == 0){
+            break;
+        }
+
+        printf("Printed Object: %s\n", *(charArray + i));
+    }
+}
+
+
+
 
 int main(int argc, char ** argv) {
     //printf("Hello, World!\n");
@@ -19,5 +35,17 @@ int main(int argc, char ** argv) {
         return -1;
     }
 
+    //read through all the files and read them out into a multiDimensionalCharArray
+
+
+    char readOutNames[FILECOUNTLIMIT][FILENAMESIZELIMIT] = {};
+
+    makeListOfAllObjects(readOutNames, FILECOUNTLIMIT, FILENAMESIZELIMIT,parameters);
+
+    helperPrintMultidimensionalStringArray(readOutNames, FILECOUNTLIMIT, FILENAMESIZELIMIT);
+
+
     return 0;
 }
+
+

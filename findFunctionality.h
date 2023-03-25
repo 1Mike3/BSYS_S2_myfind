@@ -5,4 +5,11 @@
 #ifndef FIND_SIMPLIFIED_FINDFUNCTIONALITY_H
 #define FIND_SIMPLIFIED_FINDFUNCTIONALITY_H
 
+#include "inputProcessing.h"
+
+#define FILECOUNTLIMIT 50
+#define FILENAMESIZELIMIT 128
+
+int makeListOfAllObjects(char readOurFileNames[FILECOUNTLIMIT][FILENAMESIZELIMIT], const int maxFilenameCount, const int maxFileNameSize, parameterData parameters);
+
 #endif //FIND_SIMPLIFIED_FINDFUNCTIONALITY_H
