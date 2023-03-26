@@ -18,21 +18,25 @@
 //LOOPS THROUGH ARGUMENT AND CHECKS IF IT MATCHES POSSIBLE EXPRESSIONS
 //Return: if found expression returns true
 // if not found expression returns FALSE
-bool checkIfArgumentIsValidExpression(char *const *argumentVector,const short expressionCount,
-                                      const char possibleExpressions[MAXEXPRESSIONAMMOUNT][MAXEXPRESSIONLENGTH],
-                                      short currentArgumentIndex);
+//added parameters for good mesaure so i can check extaStuff in this Function:
+//If Parameter is Required
+bool checkParameter(char *const *argumentVector, const short expressionCount,
+                    const char possibleExpressions[MAXEXPRESSIONAMMOUNT][MAXEXPRESSIONLENGTH],
+                    short *currentArgumentIndex, parameterData *parameters);
 
 
 int ProcessParameterData(int argumentCount, char ** argumentVector, parameterData *parameters){
 
+    //TODO reset Parameter Data and its flags exept path so no wron information on second run
+
     //the possible expressions and their count, so they can be checked in a loop
-    const short expressionCount = 4; //just write the number of valid expressions below into this variable
+    const short expressionCount = 5; //just write the number of valid expressions below into this variable
     const char possibleExpressions[MAXEXPRESSIONAMMOUNT][MAXEXPRESSIONLENGTH] = {
         "-print",
         "-ls",
-        "-name",
+        "-name", //tests so for the last three Parameters Required
         "-type",
-        "",
+        "-user",
         "",
         "",
         "",
@@ -45,10 +49,11 @@ int ProcessParameterData(int argumentCount, char ** argumentVector, parameterDat
     bool pathNotDetected = false;
     // index which indicates which parameter is being Processed
     short CurrentArgumentIndex = (parameters->totalProcessedParameters); //Argument which should be considerd during the next operation
-    CurrentArgumentIndex++;
+
     // static PATH has been Processed
     static bool pathHasBeenProcessed = false; //TODO will probably cause an error
-
+    // Parameter is for expression is Required
+    bool expressionParameterRequired = false;
 
     //CHECK IF ENOUGH PARAMETERS
     if(argumentCount == 1){
@@ -84,11 +89,19 @@ int ProcessParameterData(int argumentCount, char ** argumentVector, parameterDat
                                 //CHECKING IF FIRST INPUT PATH AND REACTING
 if(!pathHasBeenProcessed) { // if not the first run through ignore the path stuff
 
-    //loop to check if first input is Path
-    //if one of the possible matches the first input was not a path so the bool marker will be set
-    pathNotDetected = checkIfArgumentIsValidExpression(argumentVector, expressionCount, possibleExpressions, CurrentArgumentIndex);
 
-    //############################### REACT TO PATH DETECTION
+    CurrentArgumentIndex++; // fo first argument gets skipped on first run
+    parameters->totalProcessedParameters ++;
+
+
+    //LOOP TO CHECK IF FIRST INPUT IS PATH
+    //if one of the possible matches the first input was not a path so the bool marker will be set
+    pathNotDetected = checkParameter(argumentVector, expressionCount, possibleExpressions,
+                                     &CurrentArgumentIndex, parameters);
+
+
+
+    //!! path not detected first par
     if (pathNotDetected == true) {
 
         // no path was entered so write home directory as starting directory
@@ -98,18 +111,28 @@ if(!pathHasBeenProcessed) { // if not the first run through ignore the path stuf
         pathHasBeenProcessed = true; //set so Program knows not to evaluate path on second call
 
         // because first argument is not path so must be argument, write argument first parameter
-        if (argumentCount >= PARAMETERSAFEGUARD1)
+        if (argumentCount >= PARAMETERSAFEGUARD1){
+
+           checkParameter(argumentVector, expressionCount, possibleExpressions
+                          ,&CurrentArgumentIndex, parameters);
+
             strcpy(parameters->expression, *(argumentVector + PARAMETERINDEX1));
 
-        // same logic for the following argument
-        if (argumentCount >= PARAMETERSAFEGUARD2)
-            strcpy(parameters->expressionParameter, *(argumentVector + PARAMETERINDEX2));
+        }
 
+
+        // same logic for the following argument // if it requires an expression
+        if (argumentCount >= PARAMETERSAFEGUARD2 && parameters->expressionParReq == true) {
+            strcpy(parameters->expressionParameter, *(argumentVector + PARAMETERINDEX2));
+            CurrentArgumentIndex++; //incremet the Processed Parameters
+            parameters->totalProcessedParameters ++;
+        }
 
 #if DEBUGI
         printf("No Path detected, Path is: %s\n", parameters->searchPathStart);
 #endif
 
+    //!! path detected first par
     } else {    //Path was detected as the first Parameter
 
         //the first Parameter is the assumed Path, not checked for correctness
@@ -120,11 +143,21 @@ if(!pathHasBeenProcessed) { // if not the first run through ignore the path stuf
 
 
         //same logic for the expression and its Parameter:
-        if (argumentCount >= PARAMETERSAFEGUARD2)
-            strcpy(parameters->expression, *(argumentVector + PARAMETERINDEX2));
+        if (argumentCount >= PARAMETERSAFEGUARD2){
 
-        if (argumentCount >= PARAMETERSAFEGUARD3)
+             checkParameter(argumentVector, expressionCount, possibleExpressions,
+                            &CurrentArgumentIndex, parameters);
+
+            strcpy(parameters->expression, *(argumentVector + PARAMETERINDEX2));
+        }
+
+
+        if (argumentCount >= PARAMETERSAFEGUARD3 && parameters->expressionParReq == true) {
             strcpy(parameters->expressionParameter, *(argumentVector + PARAMETERINDEX3));
+            CurrentArgumentIndex++; //incremet the Processed Parameters
+            parameters->totalProcessedParameters++;
+        }
+
 #if DEBUGI
         printf("Path detected path is: %s\n", parameters->searchPathStart);
 #endif
@@ -137,22 +170,38 @@ if(!pathHasBeenProcessed) { // if not the first run through ignore the path stuf
     printf("This Should be the Expression Parameter: %s \n", parameters->expressionParameter);
 #endif
 
-} //!! END IF PATH HAS BEEN PROCESSED
+//!! END IF PATH HAS BEEN PROCESSED
+} else{ //!! Process if this has been the second call
+
+}
 
 
 
     return 0;
 }
 
-bool checkIfArgumentIsValidExpression(char *const *argumentVector, const short expressionCount,
-                                      const char possibleExpressions[MAXEXPRESSIONAMMOUNT][MAXEXPRESSIONLENGTH],
-                                      short currentArgumentIndex){
+
+
+bool checkParameter(char *const *argumentVector, const short expressionCount,
+                    const char possibleExpressions[MAXEXPRESSIONAMMOUNT][MAXEXPRESSIONLENGTH],
+                    short *currentArgumentIndex, parameterData *parameters){
 
     for (short i = 0; i <= expressionCount; i++) {
-        if (0 == strcmp(*(argumentVector + currentArgumentIndex), possibleExpressions[i])) {
+        if (0 == strcmp(*(argumentVector + *(currentArgumentIndex)), possibleExpressions[i])) {
+            if(i > 1){ //determine if Parameter for the expression is required
+                //if so set the Flag in parameters
+                parameters->expressionParReq = true;
+            }
+            parameters->expressionValid = true;
+            parameters->totalProcessedParameters++;
+            *(currentArgumentIndex) = *(currentArgumentIndex) +1;
             return true;
         }
     }
+    parameters->expressionValid = false;
+    parameters->expressionParReq = false;
+    parameters->totalProcessedParameters++;
+    *(currentArgumentIndex) = *(currentArgumentIndex) +1;
     return false;
 }
 
@@ -162,54 +211,4 @@ bool checkIfArgumentIsValidExpression(char *const *argumentVector, const short e
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-//old getopt
-/*
-             //getting stuff from getOpt
- while (true)
- {
-
-              //some Stuff to detect wrong Inputs
-
-
-     int result = getopt(argumentCount, argumentVector, "print:ls:name:type");
-     if (result == -1) break;
-     switch (result)
-     {
-         case '?':
-             break;
-         case ':':
-             fprintf(stderr, "missing argument.\n");
-             break;
-         case 'print':
-             printf("'a' was specified.\n");
-             break;
-         case 'b':
-             printf("'b' was specified.\n");
-             break;
-         case 'c':
-             printf("'c' was specified. Arg: <%s>\n", optarg);
-             break;
-         case 'd':
-             printf("'d' was specified.\n");
-             break;
-         default:
-             break;
-     }
- }
-
-*/
 
