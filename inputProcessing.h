@@ -20,9 +20,13 @@
 #define PARAMETERSAFEGUARD2 3
 #define PARAMETERSAFEGUARD3 4
 
+#define MAXEXPRESSIONAMMOUNT 10
+#define MAXEXPRESSIONLENGTH 10
+
 typedef struct ParameterData {
         char searchPathStart[128];
         char expression[128];
+        bool expressionValid;
         bool expressionParReq;
         char expressionParameter[128];
         short totalArgumentCount; //Both so can detect if should process the par function again after first run

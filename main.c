@@ -31,7 +31,6 @@ int main(int argc, char ** argv) {
     parameters.totalArgumentCount = (short)argc;
     parameters.totalProcessedParameters = 1; //so that the first argument(progName) is always counted.
 
-
     //Reading out of the first Parameter Data and checking if it returned an error
     if(0 > ProcessParameterData(argc, argv, &parameters) ){
         printf("Program shutting down\n");
