@@ -1,23 +1,24 @@
 //
-// Created by osboxes on 24/03/23.
+// Created by Mike on 24/03/23.
 //
 
 #include "findFunctionality.h"
 
 
-#include <sys/types.h>
+
 #include <dirent.h>
 #include <stdio.h>
-#include <unistd.h>
 #include <stdlib.h>
 #include <string.h>
-#include <errno.h>
 
-#define DEBUGF 1
+
+#define DEBUG_F 1
 
 int makeDirectoryObjectsList(char readOutFileNames[FILECOUNTLIMIT][FILENAMESIZELIMIT], const int maxFilenameCount, const int maxFileNameSize, parameterData parameters){
 
-#if DEBUGF
+    //TODO write into LINKED LIST isntead INTO ARRAY
+    
+#if DEBUG_F
     //just wrote random garbage into array to test something
     /*
     readOurFileNames[0][0] = 'a';
@@ -38,7 +39,7 @@ struct dirent *dd = NULL; // Directory Data
 //open the directory from the parameters, if not valid throw error and exit
 
     dir = opendir(parameters.searchPathStart);
-#if DEBUGF
+#if DEBUG_F
     printf("Parameter Opening: %s  \n", parameters.searchPathStart);
     printf("Dir Value: %p\n", dir);
     perror("Error Value: ");

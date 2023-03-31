@@ -2,12 +2,13 @@
 //   ##############   myfind utility  ###################################
 // Author: Michal Kuc
 
-//Standard Headers
 #include <stdio.h>
-//My Headers
 #include "findFunctionality.h"
 #include "inputProcessing.h"
-#include "expressionFunctions.h"
+#include <sys/stat.h>
+#include <fcntl.h>
+
+
 #define DEBUGM 0
 
 void helperPrintMultidimensionalStringArray(char charArray[FILECOUNTLIMIT][FILENAMESIZELIMIT], int lineCount, int rowCount ){
@@ -56,17 +57,41 @@ int main(int argc, char ** argv) {
 
 
 
+    //experiment filesStat
+    struct stat statBuffer;
+    char *pathname = "./FirstFile";
+
+     stat(pathname, &statBuffer);
+
+    printf("statStuff1 (mode_t): %i \n", statBuffer.st_mode);
+
+    if(S_ISDIR(statBuffer.st_mode)){
+        printf("ISDIR\n");
+    } else{
+        printf("ISNOTDIR\n");
+    }
+
+
 
 
     //read through all the for the current directory in Pars and read them out into a multiDimensionalCharArray
     char readOutNames[FILECOUNTLIMIT][FILENAMESIZELIMIT] = {};
+
+    //ToDO make so all dir entries contained in linked list
     makeDirectoryObjectsList(readOutNames, FILECOUNTLIMIT, FILENAMESIZELIMIT, parameters);
+
+
+
+
+
 
     //helper function to Print the names Array to the console for easier overview for me
     helperPrintMultidimensionalStringArray(readOutNames, FILECOUNTLIMIT, FILENAMESIZELIMIT);
 
 
     return 0;
+
+
 }
 
 

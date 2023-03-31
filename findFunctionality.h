@@ -1,12 +1,11 @@
 //
-// Created by osboxes on 24/03/23.
+// Created by Mike on 24/03/23.
 //
 
 #ifndef FIND_SIMPLIFIED_FINDFUNCTIONALITY_H
 #define FIND_SIMPLIFIED_FINDFUNCTIONALITY_H
 
 #include "inputProcessing.h"
-
 #define FILECOUNTLIMIT 50
 #define FILENAMESIZELIMIT 128
 

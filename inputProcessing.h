@@ -1,5 +1,5 @@
 //
-// Created by osboxes on 24/03/23.
+// Created by Mike on 24/03/23.
 //
 
 #ifndef FIND_SIMPLIFIED_INPUTPROCESSING_H
@@ -11,7 +11,7 @@
 #define MAXEXPRESSIONAMMOUNT 10
 #define MAXEXPRESSIONLENGTH 10
 
-//Misc offsets that are aparently not needed and don't do shit
+//Misc offsets that are apparently not needed and don't do shit
 #define STRCPYOFFSET 0
 #define CHECKARGOFFSET 0
 #define EXPRESSIONPAROFFSET 0
@@ -29,7 +29,7 @@ typedef struct ParameterData {
         bool expressionValid;
         bool expressionParReq;
         char expressionParameter[128];
-        short totalArgumentCount; //Both so can detect if should process the par function again after first run
+        short totalArgumentCount;
         short totalProcessedParameters;
 }parameterData ;
 

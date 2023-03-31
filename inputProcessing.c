@@ -7,10 +7,10 @@
 #include <string.h>
 
 
-#define DEBUGI 1
+#define DEBUG_I 0
 
 
-// myfind [starting point] [expression]
+// my_find [starting point] [expression]
 
 // function Definitions
 int checkArgument(char *const *argumentVector, short expressionCount,
@@ -85,7 +85,7 @@ int ProcessParameterData(int argumentCount, char ** argumentVector, parameterDat
             parameters->totalProcessedParameters = 1;
 
         } else{  //first (second) arg is assumed to be Path
-            //copy the contents of the first argument into patameters-Path
+            //copy the contents of the first argument into parameters-Path
             strcpy(parameters->searchPathStart, argumentVector[1]);
             parameters->totalProcessedParameters = 2;
         }
@@ -140,7 +140,7 @@ int ProcessParameterData(int argumentCount, char ** argumentVector, parameterDat
 
 
     //Debug Argument on every call helper
-#if DEBUGI
+#if DEBUG_I
 
     printf( "\n\n===== DEBUG_ProcessParameter function: ====\n");
     printf("Function Call Counter: %i\n", callCounter);
@@ -173,32 +173,32 @@ int ProcessParameterData(int argumentCount, char ** argumentVector, parameterDat
  * @return
  * 0 if not valid argument
  * 1 if valid Argument
- * 2 if valid Argument and reqires Parameter
+ * 2 if valid Argument and requires Parameter
  */
 int checkArgument(char *const *argumentVector,short expressionCount,
                   const char possibleExpressions[MAXEXPRESSIONAMMOUNT][MAXEXPRESSIONLENGTH], parameterData *parameters){
 
-//total processed parameters inserted below, check if it works TODO
-#if DEBUGI
+
+#if DEBUG_I
     printf("\n##EVALUETED String: %s ##\n", *(argumentVector + parameters->totalProcessedParameters + CHECKARGOFFSET));
 #endif
     for (short i = 0; i <= expressionCount; i++) {
 
         if (0 == strcmp(*(argumentVector + parameters->totalProcessedParameters + CHECKARGOFFSET), possibleExpressions[i])) {
             if(i > 1){ //determine if Parameter for the expression is required
-#if DEBUGI
+#if DEBUG_I
                 printf("##EVALUETED String RETURN: 2, valid arg and Par required ##\n\n");
 #endif
                 return VALID_ARGUMENT_PAR;
             }
-#if DEBUGI
+#if DEBUG_I
             printf("##EVALUETED String RETURN: 1, valid arg##\n\n");
 #endif
             return VALID_ARGUMENT_NOPAR;
         }
 
     }
-#if DEBUGI
+#if DEBUG_I
     printf("##EVALUETED String RETURN: 0, invalid arg##\n\n");
 #endif
     return INVALID_ARGUMENT;
