@@ -30,11 +30,32 @@ int main(int argc, char ** argv) {
     parameterData parameters = {};
     parameters.totalArgumentCount = (short)argc;
 
-    //Reading out of the first Parameter Data and checking if it returned an error
-    if(0 > ProcessParameterData(argc, argv, &parameters) ){
-        printf("Program shutting down\n");
-        return -1;
-    }
+
+    // loop to read out all the Parameters
+    do { //!START
+
+
+
+        //Reading out of the first Parameter Data and checking if it returned an error
+        if (0 > ProcessParameterData(argc, argv, &parameters)) {
+            printf("Program shutting down\n");
+            return -1;
+        }
+
+#if DEBUGM
+        static int b = 1;
+        printf("OUTSIDE OF LOOP, LOOPCOUNTER: %i\n", b);
+        printf("Starting Point: %s \n", parameters.searchPathStart);
+        printf("Expression: %s \n", parameters.expression);
+        printf("Expression Parameter: %s \n", parameters.expressionParameter);
+        b++;
+#endif
+    }while(parameters.totalProcessedParameters != parameters.totalArgumentCount); //!END
+
+
+
+
+
 
     //read through all the for the current directory in Pars and read them out into a multiDimensionalCharArray
     char readOutNames[FILECOUNTLIMIT][FILENAMESIZELIMIT] = {};
