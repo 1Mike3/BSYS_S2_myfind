@@ -308,7 +308,7 @@ int ProcessParameterData(int argumentCount, char ** argumentVector, parameterDat
     //Debug Argument on every call helper
 #if DEBUGI
 
-    fprintf(stderr, "\n===== DEBUG_ProcessParameter function: ====\n");
+    printf( "\n\n===== DEBUG_ProcessParameter function: ====\n");
     printf("Function Call Counter: %i\n", callCounter);
     printf("ArgumentCount: %i\n", argumentCount);
     printf("PARAMETERS:: total processed parameters: %i\n", parameters->totalProcessedParameters);
@@ -316,7 +316,7 @@ int ProcessParameterData(int argumentCount, char ** argumentVector, parameterDat
     printf("PARAMETERS:: ExpressionValue: %s\n", parameters->expression);
     printf("PARAMETERS:: Expression Parameter: %s\n", parameters->expressionParameter);
     printf("PARAMETERS:: Expression Parameter Required?: %i \n", parameters->expressionParReq);
-    printf("PARAMETERS:: Path: %s", parameters->searchPathStart);
+    printf("PARAMETERS:: Path: %s\n\n", parameters->searchPathStart);
 
 #endif
 
