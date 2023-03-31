@@ -7,21 +7,21 @@
 
 #include <stdbool.h>
 
-//Misc Macros
-#define MAXCAHRSPAR1 128
-#define MAXCHARSPAR2 128
-#define MAXCHARSPAR3 128
-
-#define PARAMETERINDEX1 1
-#define PARAMETERINDEX2 2
-#define PARAMETERINDEX3 3
-
-#define PARAMETERSAFEGUARD1 2
-#define PARAMETERSAFEGUARD2 3
-#define PARAMETERSAFEGUARD3 4
-
+// defines limit for max POSSIBLE expressions to CHOSE from and their length (unlimited possible expr entered still possible)
 #define MAXEXPRESSIONAMMOUNT 10
 #define MAXEXPRESSIONLENGTH 10
+
+//Misc offsets that are aparently not needed and don't do shit
+#define STRCPYOFFSET 0
+#define CHECKARGOFFSET 0
+#define EXPRESSIONPAROFFSET 0
+
+enum RETURNVALUESCHECKPARAMETER{
+    INVALID_ARGUMENT,
+    VALID_ARGUMENT_NOPAR,
+    VALID_ARGUMENT_PAR
+};
+
 
 typedef struct ParameterData {
         char searchPathStart[128];
