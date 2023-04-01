@@ -5,8 +5,7 @@
 #include <stdio.h>
 #include "findFunctionality.h"
 #include "inputProcessing.h"
-#include <sys/stat.h>
-#include <fcntl.h>
+
 
 
 #define DEBUGM 0
@@ -57,20 +56,6 @@ int main(int argc, char ** argv) {
 
 
 
-    //experiment filesStat
-    struct stat statBuffer;
-    char *pathname = "./FirstFile";
-
-     stat(pathname, &statBuffer);
-
-    printf("statStuff1 (mode_t): %i \n", statBuffer.st_mode);
-
-    if(S_ISDIR(statBuffer.st_mode)){
-        printf("ISDIR\n");
-    } else{
-        printf("ISNOTDIR\n");
-    }
-
 
 
 
@@ -80,6 +65,15 @@ int main(int argc, char ** argv) {
     //ToDO make so all dir entries contained in linked list
     makeDirectoryObjectsList(readOutNames, FILECOUNTLIMIT, FILENAMESIZELIMIT, parameters);
 
+
+
+
+
+// EXPERIMENT PASSING AND READING OBJECT INFORMATION
+  char filename[FILENAMESIZELIMIT] = "TestDir2";
+  fileSystemObject testObject;
+    createFileSystemObjectInstance(filename, &testObject);
+    printObject(&testObject);
 
 
 

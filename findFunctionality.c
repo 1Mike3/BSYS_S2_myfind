@@ -10,9 +10,11 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-
+#include <sys/stat.h>
+#include <fcntl.h>
 
 #define DEBUG_F 1
+#define DEBUG_PRINT_OBJECT 1
 
 int makeDirectoryObjectsList(char readOutFileNames[FILECOUNTLIMIT][FILENAMESIZELIMIT], const int maxFilenameCount, const int maxFileNameSize, parameterData parameters){
 
@@ -76,4 +78,92 @@ struct dirent *dd = NULL; // Directory Data
     }
 
     return  0;
+}
+
+
+
+
+
+
+
+int createFileSystemObjectInstance(char objectName[FILENAMESIZELIMIT], fileSystemObject *objectStruct){
+
+    //experiment filesStat
+    struct stat statBuffer;
+    char pathname[FILENAMESIZELIMIT];
+
+    strcpy(pathname, objectName);
+
+    stat(pathname, &statBuffer);
+
+   // printf("statStuff1 (mode_t): %i \n", statBuffer.st_mode);
+
+
+
+
+                    //Write object Name         ,checked
+    strcpy(objectStruct->objectName, pathname);
+
+                    //Determine object type and write into Object
+    if       (S_ISREG(statBuffer.st_mode)){
+        objectStruct->objectType = T_REGULAR_FILE;
+    } else if(S_ISDIR(statBuffer.st_mode)){
+        objectStruct->objectType = T_DIRECTORY;
+    } else if(S_ISCHR(statBuffer.st_mode)){
+        objectStruct->objectType = T_CHARACTER_DEVICE;
+    } else if(S_ISBLK(statBuffer.st_mode)){
+        objectStruct->objectType = T_BLOCK_DEVICE;
+    } else if(S_ISFIFO(statBuffer.st_mode)){
+        objectStruct->objectType = T_NAMED_PIPE;
+    }else if(S_ISLNK(statBuffer.st_mode)){
+        objectStruct->objectType = T_SYMBOLIC_LINK;
+    }else if(S_ISSOCK(statBuffer.st_mode)){
+        objectStruct->objectType = T_SOCKET;
+    }
+
+            //Determine Inode Number            ,checked
+    objectStruct->inodeNumber = statBuffer.st_ino;
+
+            //Determine number of Used Blocks               ,wrong
+    objectStruct->usedBlocks = statBuffer.st_blocks;
+
+            //Determine Permission String
+
+            //Determine Number of links
+
+            //Determine Owner Name
+
+            //Determine Group
+
+            //Determine number of size in Bytes             ,checked
+            objectStruct->fileSize_Bytes = statBuffer.st_size;
+
+            //Determine Timestamp
+
+
+    return 0;
+}
+
+
+
+
+
+
+void printObject(fileSystemObject *object){
+#if DEBUG_PRINT_OBJECT
+    printf("#### print object function ####\n");
+    printf("Filename: %s\n", object->objectName);
+    printf("ObjectType: %i \n\n", object->objectType);
+#endif
+    printf("%li\t", object->inodeNumber);
+    printf("%li\t", object->usedBlocks);
+    printf("%s\t", object->permissionString);
+    printf("%i\t", object->numberOfLinks);
+    printf("%s\t", object->owner);
+    printf("%s\t", object->group);
+    printf("%li\t", object->fileSize_Bytes);
+    printf("%s\n", object->modificationDate);
+#if DEBUG_PRINT_OBJECT
+    printf("## END print object function ##\n\n");
+#endif
 }
