@@ -70,7 +70,7 @@ int main(int argc, char ** argv) {
 
 
 // EXPERIMENT PASSING AND READING OBJECT INFORMATION
-  char filename[FILENAMESIZELIMIT] = "TestDir2";
+  char filename[FILENAMESIZELIMIT] = "FirstFile";
   fileSystemObject testObject;
     createFileSystemObjectInstance(filename, &testObject);
     printObject(&testObject);

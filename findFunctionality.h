@@ -27,6 +27,8 @@ typedef struct FilesystemObject {
     char modificationDate[MAX_DATE_TIME_LENGTH];
     char objectName[FILENAMESIZELIMIT];
     int objectType;  //corresponding enum for easier use
+    char fullObjectPath; //let's see if i'll need this two, but will add them anyway
+    char pathFromStartDir;
 }fileSystemObject;
 
 enum OBJECT_TYPES{
@@ -37,6 +39,25 @@ enum OBJECT_TYPES{
     T_NAMED_PIPE,
     T_SYMBOLIC_LINK,
     T_SOCKET
+};
+
+
+
+//Time
+
+enum MONTHS{
+    JANUARY,
+    FEBRUARY,
+    MARCH,
+    APRIL,
+    MAY,
+    JUNE,
+    JULY,
+    AUGUST,
+    SEPTEMBER,
+    OCTOBER,
+    NOVEMBER,
+    DECEMBER
 };
 
 

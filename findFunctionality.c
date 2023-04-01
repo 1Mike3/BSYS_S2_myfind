@@ -12,6 +12,10 @@
 #include <string.h>
 #include <sys/stat.h>
 #include <fcntl.h>
+#include <time.h>
+#include <pwd.h>
+#include <grp.h>
+
 
 #define DEBUG_F 1
 #define DEBUG_PRINT_OBJECT 1
@@ -88,7 +92,7 @@ struct dirent *dd = NULL; // Directory Data
 
 int createFileSystemObjectInstance(char objectName[FILENAMESIZELIMIT], fileSystemObject *objectStruct){
 
-    //experiment filesStat
+
     struct stat statBuffer;
     char pathname[FILENAMESIZELIMIT];
 
@@ -96,11 +100,8 @@ int createFileSystemObjectInstance(char objectName[FILENAMESIZELIMIT], fileSyste
 
     stat(pathname, &statBuffer);
 
-   // printf("statStuff1 (mode_t): %i \n", statBuffer.st_mode);
 
-
-
-
+//######################################################## Start determine Objects Area
                     //Write object Name         ,checked
     strcpy(objectStruct->objectName, pathname);
 
@@ -128,21 +129,119 @@ int createFileSystemObjectInstance(char objectName[FILENAMESIZELIMIT], fileSyste
     objectStruct->usedBlocks = statBuffer.st_blocks;
 
             //Determine Permission String
+//writing symbols char by char with the permission macros
+    objectStruct->permissionString[0] = (char)(S_ISDIR(statBuffer.st_mode) ? 'd' : '-');
+    objectStruct->permissionString[1] = (char )((statBuffer.st_mode & S_IRUSR) ? 'r' : '-');
+    objectStruct->permissionString[2] = (char )((statBuffer.st_mode & S_IWUSR) ? 'w' : '-');
+    objectStruct->permissionString[3] = (char )((statBuffer.st_mode & S_IXUSR) ? 'x' : '-');
+    objectStruct->permissionString[4] = (char )((statBuffer.st_mode & S_IRGRP) ? 'r' : '-');
+    objectStruct->permissionString[5] = (char )((statBuffer.st_mode & S_IWGRP) ? 'w' : '-');
+    objectStruct->permissionString[6] = (char )((statBuffer.st_mode & S_IXGRP) ? 'x' : '-');
+    objectStruct->permissionString[7] = (char )((statBuffer.st_mode & S_IROTH) ? 'r' : '-');
+    objectStruct->permissionString[8] = (char )((statBuffer.st_mode & S_IWOTH) ? 'w' : '-');
+    objectStruct->permissionString[9] = (char )((statBuffer.st_mode & S_IXOTH) ? 'x' : '-');
 
             //Determine Number of links
+    objectStruct->numberOfLinks = (int)statBuffer.st_nlink;
 
             //Determine Owner Name
+    //guess i'll do it with the password function
+    struct passwd *pw = getpwuid(statBuffer.st_uid);
+    strcpy(objectStruct->owner, pw->pw_name);
 
             //Determine Group
+    struct group *grp = getgrgid(statBuffer.st_gid);
+    strcpy(objectStruct->group, grp->gr_name);
+
+
 
             //Determine number of size in Bytes             ,checked
             objectStruct->fileSize_Bytes = statBuffer.st_size;
 
+
+
+
             //Determine Timestamp
+
+//objectStruct->modificationDate
+char lastModTimeString[MAX_DATE_TIME_LENGTH];
+struct timespec timeMod = statBuffer.st_mtim;
+
+    struct tm tm; //create struct broken down in time valuesl
+    tm  = *gmtime(&timeMod.tv_sec); //get time split into struct
+
+    int year = tm.tm_year;
+    int day = tm.tm_mday;
+    int min = tm.tm_min;
+    int hour = tm.tm_hour;
+/*
+    printf("TIMEPRINTTEST:::::::::\n\n");
+    printf("mon = %d\n",mon);
+    printf("day = %d\n", day);
+   // printf("year = %i\n", year);
+    printf("hour = %d\n", hour);
+    printf("min = %d\n\n", min);
+*/
+    //determine Month
+    char monthString[4] = {};
+    //stitchcase To write correct monthstring.
+    switch (tm.tm_mon) {
+        case JANUARY:strcpy(monthString, "JAN");break;
+        case FEBRUARY:strcpy(monthString, "FEB");break;
+        case MARCH:strcpy(monthString, "MAR");break;
+        case APRIL:strcpy(monthString, "APR");break;
+        case MAY:strcpy(monthString, "MAY");break;
+        case JUNE:strcpy(monthString, "JUN");break;
+        case JULY:strcpy(monthString, "JUL");break;
+        case AUGUST:strcpy(monthString, "AUG");break;
+        case SEPTEMBER:strcpy(monthString, "SEP");break;
+        case OCTOBER:strcpy(monthString, "OCT");break;
+        case NOVEMBER:strcpy(monthString, "NOV");break;
+        case DECEMBER:strcpy(monthString, "DEC");break;
+        default:
+            fprintf(stderr, "ERROR Time Determination unexpected Behavior\n");
+            break;
+    }
+
+    //days
+    char dayString[5];
+    sprintf(dayString, "%d", day);
+
+    //shift hour offset
+    hour++; //because counts from 0 offset
+    char hourString[5];
+    sprintf(hourString, "%d", hour);
+
+    //minutes a
+    char minuteString[5];
+    sprintf(minuteString, "%d", min);
+
+    // colon separator
+    char separator = ':';
+
+    // Fuse everything together into Correct time String
+    lastModTimeString[0] = '\0'; // set to zero in the beginning
+    strcpy(lastModTimeString, monthString);
+    strcat(lastModTimeString, " ");
+    strcat(lastModTimeString, dayString);
+    strcat(lastModTimeString, " ");
+    strcat(lastModTimeString, hourString);
+    strcat(lastModTimeString, ":");
+    strcat(lastModTimeString, minuteString);
+
+
+
+    // OLD WORKS BUT WRONG FORMAT strcpy(lastModTimeString,(ctime(&timeMod.tv_sec)));
+    strcpy(objectStruct->modificationDate, lastModTimeString);
+
+
+
+//############################## End Determine Objects Area
 
 
     return 0;
-}
+};
+
 
 
 
@@ -162,7 +261,8 @@ void printObject(fileSystemObject *object){
     printf("%s\t", object->owner);
     printf("%s\t", object->group);
     printf("%li\t", object->fileSize_Bytes);
-    printf("%s\n", object->modificationDate);
+    printf("%s\t", object->modificationDate);
+    printf("%s\n", object->objectName); //TODO maybe change later to full object path
 #if DEBUG_PRINT_OBJECT
     printf("## END print object function ##\n\n");
 #endif
