@@ -10,6 +10,8 @@
 
 #define DEBUGM 0
 
+
+//helper for printing all objects, need to be modified for ll
 void helperPrintMultidimensionalStringArray(char charArray[FILECOUNTLIMIT][FILENAMESIZELIMIT], int lineCount, int rowCount ){
     for (int i = 0; i < lineCount; ++i){
 

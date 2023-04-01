@@ -90,6 +90,21 @@ struct dirent *dd = NULL; // Directory Data
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 int createFileSystemObjectInstance(char objectName[FILENAMESIZELIMIT], fileSystemObject *objectStruct){
 
 
@@ -101,9 +116,13 @@ int createFileSystemObjectInstance(char objectName[FILENAMESIZELIMIT], fileSyste
     stat(pathname, &statBuffer);
 
 
-//######################################################## Start determine Objects Area
+//######################################################## Start determine -ls Objects Area
+
+
                     //Write object Name         ,checked
     strcpy(objectStruct->objectName, pathname);
+
+
 
                     //Determine object type and write into Object
     if       (S_ISREG(statBuffer.st_mode)){
@@ -122,11 +141,16 @@ int createFileSystemObjectInstance(char objectName[FILENAMESIZELIMIT], fileSyste
         objectStruct->objectType = T_SOCKET;
     }
 
+
+
             //Determine Inode Number            ,checked
     objectStruct->inodeNumber = statBuffer.st_ino;
 
+
             //Determine number of Used Blocks               ,wrong
     objectStruct->usedBlocks = statBuffer.st_blocks;
+
+
 
             //Determine Permission String
 //writing symbols char by char with the permission macros
@@ -141,13 +165,19 @@ int createFileSystemObjectInstance(char objectName[FILENAMESIZELIMIT], fileSyste
     objectStruct->permissionString[8] = (char )((statBuffer.st_mode & S_IWOTH) ? 'w' : '-');
     objectStruct->permissionString[9] = (char )((statBuffer.st_mode & S_IXOTH) ? 'x' : '-');
 
+
+
             //Determine Number of links
     objectStruct->numberOfLinks = (int)statBuffer.st_nlink;
+
+
 
             //Determine Owner Name
     //guess i'll do it with the password function
     struct passwd *pw = getpwuid(statBuffer.st_uid);
     strcpy(objectStruct->owner, pw->pw_name);
+
+
 
             //Determine Group
     struct group *grp = getgrgid(statBuffer.st_gid);
@@ -155,84 +185,84 @@ int createFileSystemObjectInstance(char objectName[FILENAMESIZELIMIT], fileSyste
 
 
 
-            //Determine number of size in Bytes             ,checked
-            objectStruct->fileSize_Bytes = statBuffer.st_size;
+        //Determine number of size in Bytes             ,checked
+        objectStruct->fileSize_Bytes = statBuffer.st_size;
 
 
 
 
-            //Determine Timestamp
+                        //Determine Timestamp
 
-//objectStruct->modificationDate
-char lastModTimeString[MAX_DATE_TIME_LENGTH];
-struct timespec timeMod = statBuffer.st_mtim;
+            //objectStruct->modificationDate
+            char lastModTimeString[MAX_DATE_TIME_LENGTH];
+            struct timespec timeMod = statBuffer.st_mtim;
 
-    struct tm tm; //create struct broken down in time valuesl
-    tm  = *gmtime(&timeMod.tv_sec); //get time split into struct
+                struct tm tm; //create struct broken down in time valuesl
+                tm  = *gmtime(&timeMod.tv_sec); //get time split into struct
 
-    int year = tm.tm_year;
-    int day = tm.tm_mday;
-    int min = tm.tm_min;
-    int hour = tm.tm_hour;
-/*
-    printf("TIMEPRINTTEST:::::::::\n\n");
-    printf("mon = %d\n",mon);
-    printf("day = %d\n", day);
-   // printf("year = %i\n", year);
-    printf("hour = %d\n", hour);
-    printf("min = %d\n\n", min);
-*/
-    //determine Month
-    char monthString[4] = {};
-    //stitchcase To write correct monthstring.
-    switch (tm.tm_mon) {
-        case JANUARY:strcpy(monthString, "JAN");break;
-        case FEBRUARY:strcpy(monthString, "FEB");break;
-        case MARCH:strcpy(monthString, "MAR");break;
-        case APRIL:strcpy(monthString, "APR");break;
-        case MAY:strcpy(monthString, "MAY");break;
-        case JUNE:strcpy(monthString, "JUN");break;
-        case JULY:strcpy(monthString, "JUL");break;
-        case AUGUST:strcpy(monthString, "AUG");break;
-        case SEPTEMBER:strcpy(monthString, "SEP");break;
-        case OCTOBER:strcpy(monthString, "OCT");break;
-        case NOVEMBER:strcpy(monthString, "NOV");break;
-        case DECEMBER:strcpy(monthString, "DEC");break;
-        default:
-            fprintf(stderr, "ERROR Time Determination unexpected Behavior\n");
-            break;
-    }
+                int year = tm.tm_year;
+                int day = tm.tm_mday;
+                int min = tm.tm_min;
+                int hour = tm.tm_hour;
+            /*
+                printf("TIMEPRINTTEST:::::::::\n\n");
+                printf("mon = %d\n",mon);
+                printf("day = %d\n", day);
+               // printf("year = %i\n", year);
+                printf("hour = %d\n", hour);
+                printf("min = %d\n\n", min);
+            */
+                //determine Month
+                char monthString[4] = {};
+                //stitchcase To write correct monthstring.
+                switch (tm.tm_mon) {
+                    case JANUARY:strcpy(monthString, "JAN");break;
+                    case FEBRUARY:strcpy(monthString, "FEB");break;
+                    case MARCH:strcpy(monthString, "MAR");break;
+                    case APRIL:strcpy(monthString, "APR");break;
+                    case MAY:strcpy(monthString, "MAY");break;
+                    case JUNE:strcpy(monthString, "JUN");break;
+                    case JULY:strcpy(monthString, "JUL");break;
+                    case AUGUST:strcpy(monthString, "AUG");break;
+                    case SEPTEMBER:strcpy(monthString, "SEP");break;
+                    case OCTOBER:strcpy(monthString, "OCT");break;
+                    case NOVEMBER:strcpy(monthString, "NOV");break;
+                    case DECEMBER:strcpy(monthString, "DEC");break;
+                    default:
+                        fprintf(stderr, "ERROR Time Determination unexpected Behavior\n");
+                        break;
+                }
 
-    //days
-    char dayString[5];
-    sprintf(dayString, "%d", day);
+                //days
+                char dayString[5];
+                sprintf(dayString, "%d", day);
 
-    //shift hour offset
-    hour++; //because counts from 0 offset
-    char hourString[5];
-    sprintf(hourString, "%d", hour);
+                //shift hour offset
+                hour++; //because counts from 0 offset
+                char hourString[5];
+                sprintf(hourString, "%d", hour);
 
-    //minutes a
-    char minuteString[5];
-    sprintf(minuteString, "%d", min);
+                //minutes a
+                char minuteString[5];
+                sprintf(minuteString, "%d", min);
 
-    // colon separator
-    char separator = ':';
+                // colon separator
+                char separator = ':';
 
-    // Fuse everything together into Correct time String
-    lastModTimeString[0] = '\0'; // set to zero in the beginning
-    strcpy(lastModTimeString, monthString);
-    strcat(lastModTimeString, " ");
-    strcat(lastModTimeString, dayString);
-    strcat(lastModTimeString, " ");
-    strcat(lastModTimeString, hourString);
-    strcat(lastModTimeString, ":");
-    strcat(lastModTimeString, minuteString);
+                // Fuse everything together into Correct time String
+                lastModTimeString[0] = '\0'; // set to zero in the beginning
+                strcpy(lastModTimeString, monthString);
+                strcat(lastModTimeString, " ");
+                strcat(lastModTimeString, dayString);
+                strcat(lastModTimeString, " ");
+                strcat(lastModTimeString, hourString);
+                strcat(lastModTimeString, ":");
+                strcat(lastModTimeString, minuteString);
 
 
 
-    // OLD WORKS BUT WRONG FORMAT strcpy(lastModTimeString,(ctime(&timeMod.tv_sec)));
-    strcpy(objectStruct->modificationDate, lastModTimeString);
+                // OLD WORKS BUT WRONG FORMAT strcpy(lastModTimeString,(ctime(&timeMod.tv_sec)));
+                strcpy(objectStruct->modificationDate, lastModTimeString);
 
 
 
@@ -241,6 +271,24 @@ struct timespec timeMod = statBuffer.st_mtim;
 
     return 0;
 };
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
