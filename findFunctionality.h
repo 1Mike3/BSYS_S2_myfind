@@ -65,23 +65,37 @@ enum MONTHS{
 
 // LINKED LIST for managing the Object Data
 
-typedef struct node{
+typedef struct node node;
+struct node {
     fileSystemObject object;
-    fileSystemObject *next;
-}node;
-
-extern fileSystemObject * head;
-extern fileSystemObject * tail;
-
-
+    node *next;
+};
 
 
 // FUNCTIONS
-
+/**
+ *
+ * @param readOutFileNames
+ * @param maxFilenameCount
+ * @param maxFileNameSize
+ * @param parameters
+ * @return
+ */
 int makeDirectoryObjectsList(char readOutFileNames[FILECOUNTLIMIT][FILENAMESIZELIMIT],int maxFilenameCount,int maxFileNameSize, parameterData parameters);
-
-int createFileSystemObjectInstance(char objectName[FILENAMESIZELIMIT], fileSystemObject *objectStruct);
-
+/**
+ * @fn Create Object Instance
+ * @brief creates an Object of the passed-through path and links it together in a LL
+ *
+ *
+ * @param objectName Name of the Path that points to the Object
+ * @param HEAD headpointer passed to created to
+ * @return
+ */
+int createFileSystemObjectInstance(char objectName[FILENAMESIZELIMIT], node *HEAD);
+/**
+ *
+ * @param object
+ */
 void printObject(fileSystemObject *object);
 
 #endif //FIND_SIMPLIFIED_FINDFUNCTIONALITY_H

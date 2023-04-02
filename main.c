@@ -5,28 +5,24 @@
 #include <stdio.h>
 #include "findFunctionality.h"
 #include "inputProcessing.h"
-
-
+#include <stdlib.h>
+#include "linkedLists.h"
 
 #define DEBUGM 0
 
 
+
 //helper for printing all objects, need to be modified for ll
-void helperPrintMultidimensionalStringArray(char charArray[FILECOUNTLIMIT][FILENAMESIZELIMIT], int lineCount, int rowCount ){
-    for (int i = 0; i < lineCount; ++i){
-
-        if(charArray[i][0] == 0){
-            break;
-        }
-
-        printf("Printed Object: %s\n", *(charArray + i));
-    }
-}
+void helperPrintMultidimensionalStringArray(char charArray[FILECOUNTLIMIT][FILENAMESIZELIMIT], int lineCount, int rowCount );
 
 
 
 
 int main(int argc, char ** argv) {
+
+
+
+    ///###########################  READ PAR AREA   ########################################
 
     //central location where the (currently processed) User Parameters are held
     parameterData parameters = {};
@@ -60,6 +56,7 @@ int main(int argc, char ** argv) {
 
 
 
+    ///###########################  Parsing Through Dir Structure   ########################################
 
     //read through all the for the current directory in Pars and read them out into a multiDimensionalCharArray
     char readOutNames[FILECOUNTLIMIT][FILENAMESIZELIMIT] = {};
@@ -71,23 +68,48 @@ int main(int argc, char ** argv) {
 
 
 
-// EXPERIMENT PASSING AND READING OBJECT INFORMATION
+
+///###########################  Object Information and Linked Lists  ########################################
   char filename[FILENAMESIZELIMIT] = "FirstFile";
-  fileSystemObject testObject;
-    createFileSystemObjectInstance(filename, &testObject);
-    printObject(&testObject);
+
+  ///create HEAD POINTER
+  //TODO FREE HEAD at every Return!
+    node *HEAD = calloc(1, sizeof(node));
+
+    /// create and Link Object Instance
+    createFileSystemObjectInstance(filename, HEAD);
+    printObject(&(HEAD->next->object));
+
+///Destroy the Linked List
+    llDestroyLinkedList(HEAD);
 
 
-
-
+///###########################  Helper Functions  ########################################
 
     //helper function to Print the names Array to the console for easier overview for me
     helperPrintMultidimensionalStringArray(readOutNames, FILECOUNTLIMIT, FILENAMESIZELIMIT);
 
 
-    return 0;
 
+
+    return 0;
 
 }
 
 
+
+
+
+
+
+//helper for printing all objects, need to be modified for ll
+void helperPrintMultidimensionalStringArray(char charArray[FILECOUNTLIMIT][FILENAMESIZELIMIT], int lineCount, int rowCount ){
+    for (int i = 0; i < lineCount; ++i){
+
+        if(charArray[i][0] == 0){
+            break;
+        }
+
+        printf("Printed Object: %s\n", *(charArray + i));
+    }
+}

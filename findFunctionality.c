@@ -15,14 +15,17 @@
 #include <time.h>
 #include <pwd.h>
 #include <grp.h>
-
+#include "linkedLists.h"
 
 #define DEBUG_F 1
 #define DEBUG_PRINT_OBJECT 1
 
+
+
+//TODO adapt to ll
 int makeDirectoryObjectsList(char readOutFileNames[FILECOUNTLIMIT][FILENAMESIZELIMIT], const int maxFilenameCount, const int maxFileNameSize, parameterData parameters){
 
-    //TODO write into LINKED LIST isntead INTO ARRAY
+
     
 #if DEBUG_F
     //just wrote random garbage into array to test something
@@ -105,15 +108,29 @@ struct dirent *dd = NULL; // Directory Data
 
 
 
-int createFileSystemObjectInstance(char objectName[FILENAMESIZELIMIT], fileSystemObject *objectStruct){
 
 
+
+
+
+
+int createFileSystemObjectInstance(char objectName[FILENAMESIZELIMIT], node *HEAD){
+
+    //todo free, maybe uneccessary, only passing values to node
+    ///initialize object struct
+    fileSystemObject *objectStruct = calloc(1, sizeof(fileSystemObject));
+
+
+
+/// initailize stat struct with object instance with selected boject
     struct stat statBuffer;
     char pathname[FILENAMESIZELIMIT];
-
     strcpy(pathname, objectName);
-
     stat(pathname, &statBuffer);
+
+
+
+
 
 
 //######################################################## Start determine -ls Objects Area
@@ -265,8 +282,15 @@ int createFileSystemObjectInstance(char objectName[FILENAMESIZELIMIT], fileSyste
                 strcpy(objectStruct->modificationDate, lastModTimeString);
 
 
-
 //############################## End Determine Objects Area
+
+
+    //zone in which th Linked List functions are being processed
+    ///############### LL ZONE #########################################
+    llLink(HEAD, objectStruct);
+    free(objectStruct);
+
+    ///################## END LL ZONE #########################################
 
 
     return 0;
