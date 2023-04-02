@@ -14,8 +14,7 @@
 #define MAX_DATE_TIME_LENGTH 30
 
 
-// OBJECT TYPE
-
+/// Struct holding all the required Information of an Object in the Filesystem eg. Dir, File, Link
 typedef struct FilesystemObject {
     unsigned long inodeNumber;
     long usedBlocks;
@@ -31,6 +30,8 @@ typedef struct FilesystemObject {
     char pathFromStartDir;
 }fileSystemObject;
 
+
+/// ennum decoding the different object types in FilesystemObject.objectType
 enum OBJECT_TYPES{
     T_REGULAR_FILE,
     T_DIRECTORY,
@@ -43,8 +44,7 @@ enum OBJECT_TYPES{
 
 
 
-//Time
-
+///Months enum for the correct -ls format
 enum MONTHS{
     JANUARY,
     FEBRUARY,
@@ -63,8 +63,7 @@ enum MONTHS{
 
 
 
-// LINKED LIST for managing the Object Data
-
+/// node struct for LL
 typedef struct node node;
 struct node {
     fileSystemObject object;
@@ -86,14 +85,21 @@ int makeDirectoryObjectsList(char readOutFileNames[FILECOUNTLIMIT][FILENAMESIZEL
  * @fn Create Object Instance
  * @brief creates an Object of the passed-through path and links it together in a LL
  *
+ * One of the largest Functions, hard to Debug
+ * Also formats the Object Data in the -ls format
  *
  * @param objectName Name of the Path that points to the Object
  * @param HEAD headpointer passed to created to
- * @return
+ * @return 0 if successful, -1 on Error
  */
+
+
 int createFileSystemObjectInstance(char objectName[FILENAMESIZELIMIT], node *HEAD);
+
+
 /**
- *
+ *@fn
+ * @brief Pints all* the Information of an Object in the -ls Format
  * @param object
  */
 void printObject(fileSystemObject *object);

@@ -23,27 +23,6 @@ int checkArgument(char *const *argumentVector, short expressionCount,
 
 
 
-/**
- * @fn Process Parameter function
- * @brief looping though arguments and retrieving information
- *
- * behaves in the following way:
- * on the first call:
- * only determines path,
- * writes home dir if first arg is valid expression,
- * if first par is not valid expression assumes path and writes it as working dir.
- * on the following calls:
- * processes one parameter and optional expression at a time.
- * Increments the processed pars counter in the parameters Struct for
- * every valid, invalid expression and for every expression parameter
- *
- * @param argumentCount
- * @param argumentVector
- * @param parameters
- *
- * @return 0 if successful (even if invalid arg), -1 if an error occurred
- */
-
 int ProcessParameterData(int argumentCount, char ** argumentVector, parameterData *parameters){
 
     if(argumentCount == 1){ //for starters if no args detected no point in going on
