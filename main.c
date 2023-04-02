@@ -72,6 +72,11 @@ int main(int argc, char ** argv) {
 ///###########################  Object Information and Linked Lists  ########################################
   char filename[FILENAMESIZELIMIT] = "FirstFile";
 
+/*
+                              //TEST
+                                char filename2[FILENAMESIZELIMIT] = "TestDir2";
+                                char filename3[FILENAMESIZELIMIT] = "Animals";
+*/
   ///create HEAD POINTER
   //TODO FREE HEAD at every Return!
     node *HEAD = calloc(1, sizeof(node));
@@ -79,7 +84,14 @@ int main(int argc, char ** argv) {
     /// create and Link Object Instance
     createFileSystemObjectInstance(filename, HEAD);
     printObject(&(HEAD->next->object));
+/*
+                            //TEST
+                            createFileSystemObjectInstance(filename2, HEAD);
+                            printObject(&(HEAD->next->object));
 
+                            createFileSystemObjectInstance(filename3, HEAD);
+                            printObject(&(HEAD->next->object));
+*/
 ///Destroy the Linked List
     llDestroyLinkedList(HEAD);
 

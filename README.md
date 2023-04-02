@@ -18,7 +18,8 @@
 - Every linked node Instance
 - 
 ## POBLEMS
-- object instance allocated but then passed to ll as value
+- -ls second value double of what should be with directories
+- -ls last value not full path from search but only absolute Name
 
 
 ## DESCRIPTION

@@ -18,7 +18,7 @@
 #include "linkedLists.h"
 
 #define DEBUG_F 1
-#define DEBUG_PRINT_OBJECT 1
+#define DEBUG_PRINT_OBJECT 0
 
 
 
@@ -323,8 +323,8 @@ int createFileSystemObjectInstance(char objectName[FILENAMESIZELIMIT], node *HEA
 void printObject(fileSystemObject *object){
 #if DEBUG_PRINT_OBJECT
     printf("#### print object function ####\n");
-    printf("Filename: %s\n", object->objectName);
-    printf("ObjectType: %i \n\n", object->objectType);
+   // printf("Filename: %s\n", object->objectName);
+    printf("ObjectType: %i \n", object->objectType);
 #endif
     printf("%li\t", object->inodeNumber);
     printf("%li\t", object->usedBlocks);
