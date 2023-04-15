@@ -58,8 +58,8 @@ int ProcessParameterData(int argumentCount, char ** argumentVector, parameterDat
         if(expressionValidDetermination == VALID_ARGUMENT_NOPAR || expressionValidDetermination == VALID_ARGUMENT_PAR){
             //if first argument determined to be expression write current dir as path
             parameters->searchPathStart[0] = '.';
-            parameters->searchPathStart[1] = '/';
-            parameters->searchPathStart[2] = '\0';
+            //parameters->searchPathStart[1] = '/';
+            parameters->searchPathStart[1] = '\0';
             //decrement processed Parameters, because path has been written manually
             parameters->totalProcessedParameters = 1;
 

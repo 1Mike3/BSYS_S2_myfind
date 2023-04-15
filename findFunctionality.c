@@ -17,13 +17,13 @@
 #include <grp.h>
 #include "linkedLists.h"
 
-#define DEBUG_F 0
+#define DEBUG_F 1
 #define DEBUG_PRINT_OBJECT 0
 
 
 
 //TODO adapt to ll
-int makeDirectoryObjectsList(char readOutFileNames[FILECOUNTLIMIT][FILENAMESIZELIMIT], parameterData parameters, node * HEAD){
+int makeDirectoryObjectsList( parameterData parameters, node * HEAD){
 
 
     
@@ -43,18 +43,28 @@ int makeDirectoryObjectsList(char readOutFileNames[FILECOUNTLIMIT][FILENAMESIZEL
 
 DIR * dir;
 struct dirent *dd = NULL; // Directory Data
-
+        //const for excluding standard directorys
+        const char homeDir[] = ".";
+        const char prevDir[] = "..";
 
 //open the directory from the parameters, if not valid throw error and exit
-
     dir = opendir(parameters.searchPathStart);
 #if DEBUG_F
     printf("Parameter Opening: %s  \n", parameters.searchPathStart);
     printf("Dir Value: %p\n", dir);
     perror("Error Value: ");
 #endif
+
+            ///Area for adding full Path so it can be transfered to the object
+    //contains the "working directory Path so it can be correctly added to the object and used to switch dirs"
+            static char currentDirPath[MAX_PATH_LIMIT] = {};
+            static const char pathSeparator[] = "/";
+            if(*currentDirPath == '\0'){
+                strcpy(currentDirPath, parameters.searchPathStart);
+            }
+
     if (dir <= 0){
-       fprintf(stderr,"ERROR opening \"Path\" Directory!\n");
+       fprintf(stderr,"ERROR opening \"Path\" Directory!\n EID = 346745\n");
        exit(-1);
    } else{
 
@@ -64,17 +74,43 @@ struct dirent *dd = NULL; // Directory Data
         while (((dd = readdir( dir)) != NULL)) //check if an element could be read
 
             if(dd->d_name[0] != 0){ //check if the entry is empty before copying it
-                tempLength = (int)strlen(dd->d_name); // second sanity check if really empty
-                if(tempLength != 0){
-              /// CREATE LINKED LIST AREA
+                tempLength = (int)strlen(dd->d_name); // second sanity check if really not empty
+
+
+
+                if(tempLength != 0 ) {
+
+                    /// CREATE LINKED LIST AREA
                     //switch to linked list and create object, so will comment out
                     /*
                     strcpy(readOutFileNames[i], dd->d_name); //copy to array and increase array index
                     i++;
                      */
-                    createFileSystemObjectInstance(dd->d_name, HEAD);
+
+                    //condition for skipping the . and .. dirs
+                    if(0 != strcmp(dd->d_name, prevDir) && 0 != strcmp(dd->d_name, homeDir)){
+
+                        createFileSystemObjectInstance(dd->d_name, currentDirPath, HEAD);
                     i++;
-           ///END CREATE LINKED LIST AREA
+
+                    ///conditions if Object is DIRECTORY
+                    if (dd->d_type == DT_DIR) {
+                        size_t currentDirPathLen = strlen(currentDirPath);
+                        size_t availableSpace = MAX_PATH_LIMIT - currentDirPathLen - 1;
+
+                        if (availableSpace > 0) {
+                            strncat(currentDirPath, pathSeparator, availableSpace);
+                            strncat(currentDirPath, dd->d_name, availableSpace);
+                        } else {
+                            fprintf(stderr, "ERROR, could not append Dir Path, Path too long\n EID: 452345 \n");
+                        }
+                    }
+#if DEBUG_F
+                        printf("FUSED String: %s \n", currentDirPath);
+#endif
+                    } // end if is dir statement
+                    ///END CREATE LINKED LIST AREA
+
                 } else {
                     break;// conditon to break the loop if templength = 0
                 }
@@ -103,9 +139,9 @@ struct dirent *dd = NULL; // Directory Data
 
 //#############################################################################################
 
-int createFileSystemObjectInstance(char objectName[FILENAMESIZELIMIT], node *HEAD){
+int createFileSystemObjectInstance(char objectName[FILENAMESIZELIMIT],char currentDirPath[MAX_PATH_LIMIT], node *HEAD){
 
-    //todo free, maybe uneccessary, only passing values to node
+
     ///initialize object struct
     fileSystemObject *objectStruct = calloc(1, sizeof(fileSystemObject));
 
@@ -275,8 +311,19 @@ int createFileSystemObjectInstance(char objectName[FILENAMESIZELIMIT], node *HEA
                 // OLD WORKS BUT WRONG FORMAT strcpy(lastModTimeString,(ctime(&timeMod.tv_sec)));
                 strcpy(objectStruct->modificationDate, lastModTimeString);
 
+//determine full path of the object and write it into the struct
+static const char pathSeparator[] = "/";
+    strcat(objectStruct->fullObjectPath,currentDirPath);
+    strcat(objectStruct->fullObjectPath,pathSeparator);
+    strcat(objectStruct->fullObjectPath,objectStruct->objectName);
 
+
+#if DEBUG_F
+    printf("FULL OBJECT PATH IN CREATE OBJECT: %s \n", objectStruct->fullObjectPath);
+#endif
 //############################## End Determine Objects Area
+
+
 
 
     //zone in which th Linked List functions are being processed

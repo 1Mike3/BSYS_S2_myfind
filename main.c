@@ -11,9 +11,9 @@
 #define DEBUGM 0
 
 
-
+// EXPIRED FUNCTION
 //helper for printing all objects, need to be modified for ll
-void helperPrintMultidimensionalStringArray(char charArray[FILECOUNTLIMIT][FILENAMESIZELIMIT], int lineCount, int rowCount );
+//void helperPrintMultidimensionalStringArray(char charArray[FILECOUNTLIMIT][FILENAMESIZELIMIT], int lineCount, int rowCount );
 
 
 int main(int argc, char ** argv) {
@@ -83,11 +83,8 @@ int main(int argc, char ** argv) {
 
     ///###########################  Parsing Through Dir Structure   ########################################
 
-    //read through all the for the current directory in Pars and read them out into a multiDimensionalCharArray
-    char readOutNames[FILECOUNTLIMIT][FILENAMESIZELIMIT] = {};
 
-    //ToDO make so all dir entries contained in linked list
-    makeDirectoryObjectsList(readOutNames,parameters, HEAD);
+    makeDirectoryObjectsList(parameters, HEAD);
 
 
 
@@ -96,8 +93,9 @@ int main(int argc, char ** argv) {
 
 ///###########################  Helper Functions  ########################################
 
+    //NO Longer Required, for old Array system
     //helper function to Print the names Array to the console for easier overview for me
-    helperPrintMultidimensionalStringArray(readOutNames, FILECOUNTLIMIT, FILENAMESIZELIMIT);
+    //helperPrintMultidimensionalStringArray(readOutNames, FILECOUNTLIMIT, FILENAMESIZELIMIT);
 
 
     //Print the linked list:
@@ -118,9 +116,9 @@ int main(int argc, char ** argv) {
 
 
 
+// EXPIRED FUNCTION
 
-
-
+ /*
 //helper for printing all objects, need to be modified for ll
 void helperPrintMultidimensionalStringArray(char charArray[FILECOUNTLIMIT][FILENAMESIZELIMIT], int lineCount, int rowCount ){
     for (int i = 0; i < lineCount; ++i){
@@ -132,3 +130,4 @@ void helperPrintMultidimensionalStringArray(char charArray[FILECOUNTLIMIT][FILEN
         printf("Printed Object: %s\n", *(charArray + i));
     }
 }
+*/

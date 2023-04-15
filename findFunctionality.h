@@ -13,6 +13,8 @@
 #define MAX_OWNER_AND_GROUP_NAME_LENGTH 20
 #define MAX_DATE_TIME_LENGTH 30
 
+#define MAX_PATH_LIMIT 257
+
 
 /// Struct holding all the required Information of an Object in the Filesystem eg. Dir, File, Link
 typedef struct FilesystemObject {
@@ -26,8 +28,8 @@ typedef struct FilesystemObject {
     char modificationDate[MAX_DATE_TIME_LENGTH];
     char objectName[FILENAMESIZELIMIT];
     int objectType;  //corresponding enum for easier use
-    char fullObjectPath; //let's see if i'll need this two, but will add them anyway
-    char pathFromStartDir;
+    char fullObjectPath[MAX_PATH_LIMIT]; //Path from start dir
+   // char pathFromStartDir[MAX_PATH_LIMIT]
 }fileSystemObject;
 
 
@@ -80,7 +82,7 @@ struct node {
  * @param parameters
  * @return
  */
-int makeDirectoryObjectsList(char readOutFileNames[FILECOUNTLIMIT][FILENAMESIZELIMIT], parameterData parameters, node * HEAD);
+int makeDirectoryObjectsList(parameterData parameters, node * HEAD);
 /**
  * @fn Create Object Instance
  * @brief creates an Object of the passed-through path and links it together in a LL
@@ -94,14 +96,19 @@ int makeDirectoryObjectsList(char readOutFileNames[FILECOUNTLIMIT][FILENAMESIZEL
  */
 
 
-int createFileSystemObjectInstance(char objectName[FILENAMESIZELIMIT], node *HEAD);
+int createFileSystemObjectInstance(char objectName[FILENAMESIZELIMIT],char currentDirPath[MAX_PATH_LIMIT], node *HEAD);
 
 
+
+//EXPIRED FUNCTION
 /**
  *@fn
  * @brief Pints all* the Information of an Object in the -ls Format
  * @param object
  */
+ /*
 void printObject(fileSystemObject *object);
+*/
+
 
 #endif //FIND_SIMPLIFIED_FINDFUNCTIONALITY_H
