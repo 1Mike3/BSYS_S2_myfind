@@ -16,6 +16,7 @@
 #include <pwd.h>
 #include <grp.h>
 #include "linkedLists.h"
+#include "helperFunctions.h"
 
 #define DEBUG_F 1
 #define DEBUG_PRINT_OBJECT 0
@@ -23,7 +24,7 @@
 
 
 //TODO adapt to ll
-int makeDirectoryObjectsList( parameterData parameters, node * HEAD){
+int makeDirectoryObjectsList( parameterData parameters,char RecursiveSearchPath[MAX_PATH_LIMIT], node * HEAD){
 
 
     
@@ -47,8 +48,15 @@ struct dirent *dd = NULL; // Directory Data
         const char homeDir[] = ".";
         const char prevDir[] = "..";
 
-//open the directory from the parameters, if not valid throw error and exit
-    dir = opendir(parameters.searchPathStart);
+        /// OPENING THE DIRECTORY
+            //open the directory from the parameters, if not valid throw error and exit
+            //if statement added to differentiate between the initial call and the following recursive calls
+            if(RecursiveSearchPath[0] == '\0') {
+                dir = opendir(parameters.searchPathStart);
+            } else{
+                dir = opendir(RecursiveSearchPath);
+            }
+
 #if DEBUG_F
     printf("Parameter Opening: %s  \n", parameters.searchPathStart);
     printf("Dir Value: %p\n", dir);
@@ -97,7 +105,7 @@ struct dirent *dd = NULL; // Directory Data
                     if (dd->d_type == DT_DIR) {
                         size_t currentDirPathLen = strlen(currentDirPath);
                         size_t availableSpace = MAX_PATH_LIMIT - currentDirPathLen - 1;
-
+//adding the directory th the path
                         if (availableSpace > 0) {
                             strncat(currentDirPath, pathSeparator, availableSpace);
                             strncat(currentDirPath, dd->d_name, availableSpace);
@@ -108,6 +116,11 @@ struct dirent *dd = NULL; // Directory Data
 #if DEBUG_F
                         printf("FUSED String: %s \n", currentDirPath);
 #endif
+                    //!!! call the function again with the updated path
+                        strcpy(RecursiveSearchPath, currentDirPath); //add search path to parameter so can be used on anoter function call
+                        makeDirectoryObjectsList(parameters, RecursiveSearchPath, HEAD);
+                        removeLastEntryToPath(currentDirPath);
+                        removeLastEntryToPath(RecursiveSearchPath);
                     } // end if is dir statement
                     ///END CREATE LINKED LIST AREA
 

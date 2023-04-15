@@ -83,8 +83,8 @@ int main(int argc, char ** argv) {
 
     ///###########################  Parsing Through Dir Structure   ########################################
 
-
-    makeDirectoryObjectsList(parameters, HEAD);
+char nullPathForStarters[MAX_PATH_LIMIT] = {}; //it is set to null so the initial function call can be recognized in the function
+    makeDirectoryObjectsList(parameters,nullPathForStarters, HEAD);
 
 
 

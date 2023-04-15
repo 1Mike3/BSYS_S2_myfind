@@ -82,7 +82,7 @@ struct node {
  * @param parameters
  * @return
  */
-int makeDirectoryObjectsList(parameterData parameters, node * HEAD);
+int makeDirectoryObjectsList(parameterData parameters,char RecursiveSearchPath[MAX_PATH_LIMIT], node * HEAD);
 /**
  * @fn Create Object Instance
  * @brief creates an Object of the passed-through path and links it together in a LL
