@@ -101,11 +101,10 @@ struct dirent *dd = NULL; // Directory Data
                         int returnCrObjInst; //return value of the function below
 
                             ///CREATING OBJECT
-
+                            static char fullObjectName[MAX_PATH_LIMIT]; //path for the recursive calls of the createFilesystemObject function
                             if(RecursiveSearchPath[0] == '\0') {
                                 returnCrObjInst = createFileSystemObjectInstance(dd->d_name, currentDirPath, HEAD);
                             }else{
-                                char fullObjectName[MAX_PATH_LIMIT];
                                 strcat(fullObjectName, currentDirPath);
                                 strcat(fullObjectName, pathSeparator);
                                 strcat(fullObjectName, dd->d_name);
@@ -136,8 +135,11 @@ struct dirent *dd = NULL; // Directory Data
                     //!!! call the function again with the updated path
                         strcpy(RecursiveSearchPath, currentDirPath); //add search path to parameter so can be used on anoter function call
                         int returnMkdirOl = makeDirectoryObjectsList(parameters, RecursiveSearchPath, HEAD);
-                        if(returnMkdirOl == -1)
+                        if(returnMkdirOl == -1) {
+                            fprintf(stderr, "ERROR, makeDirectoryObjectsList Failed!\nEID = 0264949\n");
                             return -1;
+                        }
+
                         removeLastEntryToPath(currentDirPath);
                         removeLastEntryToPath(RecursiveSearchPath);
                     } // end if is dir statement
