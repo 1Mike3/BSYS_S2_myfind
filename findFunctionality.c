@@ -23,7 +23,7 @@
 
 
 
-//TODO adapt to ll
+
 int makeDirectoryObjectsList( parameterData parameters,char RecursiveSearchPath[MAX_PATH_LIMIT], node * HEAD){
 
 
@@ -69,6 +69,8 @@ struct dirent *dd = NULL; // Directory Data
             static const char pathSeparator[] = "/";
             if(*currentDirPath == '\0'){
                 strcpy(currentDirPath, parameters.searchPathStart);
+            }else{
+                strcpy(currentDirPath, RecursiveSearchPath);
             }
 
     if (dir <= 0){
@@ -79,14 +81,14 @@ struct dirent *dd = NULL; // Directory Data
         //loop to read out the data from the directory into the array
         int tempLength = 0; // helper for checking if directory length = 0;
         int i = 0; //counter for the index of the FilenamesArray
-        while (((dd = readdir( dir)) != NULL)) //check if an element could be read
+        while (((dd = readdir( dir)) != NULL)) {//check if an element could be read
 
-            if(dd->d_name[0] != 0){ //check if the entry is empty before copying it
-                tempLength = (int)strlen(dd->d_name); // second sanity check if really not empty
+            if (dd->d_name[0] != 0) { //check if the entry is empty before copying it
+                tempLength = (int) strlen(dd->d_name); // second sanity check if really not empty
 
 
 
-                if(tempLength != 0 ) {
+                if (tempLength != 0) {
 
                     /// CREATE LINKED LIST AREA
                     //switch to linked list and create object, so will comment out
@@ -96,63 +98,70 @@ struct dirent *dd = NULL; // Directory Data
                      */
 
                     //condition for skipping the . and .. dirs
-                    if(0 != strcmp(dd->d_name, prevDir) && 0 != strcmp(dd->d_name, homeDir)){
+                    if (0 != strcmp(dd->d_name, prevDir) && 0 != strcmp(dd->d_name, homeDir)) {
 
                         int returnCrObjInst; //return value of the function below
 
-                            ///CREATING OBJECT
-                            static char fullObjectName[MAX_PATH_LIMIT]; //path for the recursive calls of the createFilesystemObject function
-                            if(RecursiveSearchPath[0] == '\0') {
-                                returnCrObjInst = createFileSystemObjectInstance(dd->d_name, currentDirPath, HEAD);
-                            }else{
-                                strcat(fullObjectName, currentDirPath);
-                                strcat(fullObjectName, pathSeparator);
-                                strcat(fullObjectName, dd->d_name);
-                                returnCrObjInst = createFileSystemObjectInstance(fullObjectName, currentDirPath, HEAD);
-                            }
-                           if(returnCrObjInst == -1){
-                               fprintf(stderr,"!ERROR, createFileSystemObjectInstance Failed!\n EID = 925899\n");
-                               return -1;
-                            }
-
-                    i++;
-
-                    ///conditions if Object is DIRECTORY
-                    if (dd->d_type == DT_DIR) {
-                        size_t currentDirPathLen = strlen(currentDirPath);
-                        size_t availableSpace = MAX_PATH_LIMIT - currentDirPathLen - 1;
-//adding the directory th the path
-                        if (availableSpace > 0) {
-                            strncat(currentDirPath, pathSeparator, availableSpace);
-                            strncat(currentDirPath, dd->d_name, availableSpace);
+                        ///CREATING OBJECT
+                        static char fullObjectName[MAX_PATH_LIMIT]; //path for the recursive calls of the createFilesystemObject function
+                        if (RecursiveSearchPath[0] == '\0') {
+                            returnCrObjInst = createFileSystemObjectInstance(dd->d_name, currentDirPath, HEAD);
                         } else {
-                            fprintf(stderr, "ERROR, could not append Dir Path, Path too long\n EID: 452345 \n");
+                            strcpy(fullObjectName, currentDirPath);
+                            strcat(fullObjectName, pathSeparator);
+                            strcat(fullObjectName, dd->d_name);
+                            /* debug stuff
+                            printf("FULLOBJECTNAME: %s \n", fullObjectName);
+                            printf("RECURSIVESEARCHPATH: %s \n",RecursiveSearchPath);
+                            printf("CURRENTDIRPATH: %s \n", currentDirPath);
+                             */
+                            returnCrObjInst = createFileSystemObjectInstance(fullObjectName, currentDirPath, HEAD);
                         }
-                    }
-#if DEBUG_F
-                        printf("FUSED String: %s \n", currentDirPath);
-#endif
-                    //!!! call the function again with the updated path
-                        strcpy(RecursiveSearchPath, currentDirPath); //add search path to parameter so can be used on anoter function call
-                        int returnMkdirOl = makeDirectoryObjectsList(parameters, RecursiveSearchPath, HEAD);
-                        if(returnMkdirOl == -1) {
-                            fprintf(stderr, "ERROR, makeDirectoryObjectsList Failed!\nEID = 0264949\n");
+                        if (returnCrObjInst == -1) {
+                            fprintf(stderr, "!ERROR, createFileSystemObjectInstance Failed!\n EID = 925899\n");
                             return -1;
                         }
 
+                        i++;
+
+                        ///conditions if Object is DIRECTORY
+                        if (dd->d_type == DT_DIR) {
+                            size_t currentDirPathLen = strlen(currentDirPath);
+                            size_t availableSpace = MAX_PATH_LIMIT - currentDirPathLen - 1;
+//adding the directory th the path
+                            if (availableSpace > 0) {
+                                strncat(currentDirPath, pathSeparator, availableSpace);
+                                strncat(currentDirPath, dd->d_name, availableSpace);
+                            } else {
+                                fprintf(stderr, "ERROR, could not append Dir Path, Path too long\n EID: 452345 \n");
+                            }
+
+#if DEBUG_F
+                        printf("FUSED String: %s \n", currentDirPath);
+#endif
+                        //!!! call the function again with the updated path
+                        strcpy(RecursiveSearchPath,
+                               currentDirPath); //add search path to parameter so can be used on anoter function call
+
+                        int returnMkdirOl = makeDirectoryObjectsList(parameters, RecursiveSearchPath, HEAD);
+                        if (returnMkdirOl == -1) {
+                            fprintf(stderr, "ERROR, makeDirectoryObjectsList Failed!\nEID = 0264949\n");
+                            return -1;
+                        }
                         removeLastEntryToPath(currentDirPath);
                         removeLastEntryToPath(RecursiveSearchPath);
                     } // end if is dir statement
                     ///END CREATE LINKED LIST AREA
-
+                    }
                 } else {
                     break;// conditon to break the loop if templength = 0
                 }
 
-            } else{
+            } else {
                 break; //condition to break the loop if first byte of ddname empty
             }
 
+        }//end while dd = ....l
 
    }
 //if closedir does not return >0 print error and exit
@@ -185,8 +194,11 @@ int createFileSystemObjectInstance(char objectName[FILENAMESIZELIMIT],char curre
     struct stat statBuffer;
     char pathname[FILENAMESIZELIMIT];
     strcpy(pathname, objectName);
-    stat(pathname, &statBuffer);
-
+int statReturn = stat(pathname, &statBuffer);
+    if(statReturn < 0){
+        fprintf(stderr, "ERROR opening stat buffer while creating object\nEID = 23455876\n");
+        return -1;
+    }
 
 
 
