@@ -16,8 +16,6 @@
 void helperPrintMultidimensionalStringArray(char charArray[FILECOUNTLIMIT][FILENAMESIZELIMIT], int lineCount, int rowCount );
 
 
-
-
 int main(int argc, char ** argv) {
 
 
@@ -55,36 +53,24 @@ int main(int argc, char ** argv) {
 
 
 
-
-    ///###########################  Parsing Through Dir Structure   ########################################
-
-    //read through all the for the current directory in Pars and read them out into a multiDimensionalCharArray
-    char readOutNames[FILECOUNTLIMIT][FILENAMESIZELIMIT] = {};
-
-    //ToDO make so all dir entries contained in linked list
-    makeDirectoryObjectsList(readOutNames, FILECOUNTLIMIT, FILENAMESIZELIMIT, parameters);
-
-
-
-
-
-
 ///###########################  Object Information and Linked Lists  ########################################
-  char filename[FILENAMESIZELIMIT] = "FirstFile";
 
+    ///create HEAD POINTER
+    node *HEAD = calloc(1, sizeof(node));
+
+// commenting out to focus on making of the directory list
 /*
+  char filename[FILENAMESIZELIMIT] = "file1.txt";
+
+
                               //TEST
                                 char filename2[FILENAMESIZELIMIT] = "TestDir2";
                                 char filename3[FILENAMESIZELIMIT] = "Animals";
-*/
-  ///create HEAD POINTER
-  //TODO FREE HEAD at every Return!
-    node *HEAD = calloc(1, sizeof(node));
 
     /// create and Link Object Instance
     createFileSystemObjectInstance(filename, HEAD);
     printObject(&(HEAD->next->object));
-/*
+
                             //TEST
                             createFileSystemObjectInstance(filename2, HEAD);
                             printObject(&(HEAD->next->object));
@@ -92,14 +78,35 @@ int main(int argc, char ** argv) {
                             createFileSystemObjectInstance(filename3, HEAD);
                             printObject(&(HEAD->next->object));
 */
-///Destroy the Linked List
-    llDestroyLinkedList(HEAD);
+
+
+
+    ///###########################  Parsing Through Dir Structure   ########################################
+
+    //read through all the for the current directory in Pars and read them out into a multiDimensionalCharArray
+    char readOutNames[FILECOUNTLIMIT][FILENAMESIZELIMIT] = {};
+
+    //ToDO make so all dir entries contained in linked list
+    makeDirectoryObjectsList(readOutNames,parameters, HEAD);
+
+
+
+
 
 
 ///###########################  Helper Functions  ########################################
 
     //helper function to Print the names Array to the console for easier overview for me
     helperPrintMultidimensionalStringArray(readOutNames, FILECOUNTLIMIT, FILENAMESIZELIMIT);
+
+
+    //Print the linked list:
+    printLinkedList(HEAD);
+
+///Destroy the Linked List
+    llDestroyLinkedList(HEAD);
+
+
 
 
 

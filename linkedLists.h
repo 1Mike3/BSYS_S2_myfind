@@ -20,9 +20,10 @@
  * @param objectToBeLinked pass the pointer to the Object which will be written into the node (Values)
  * @return returns 0 if everything is alright, oth. for future use
  */
-
-
 int llLink(node *HEAD, fileSystemObject * objectToBeLinked);
+
+
+
 /**
  * @fn unlink whole LL
  *
@@ -32,5 +33,14 @@ int llLink(node *HEAD, fileSystemObject * objectToBeLinked);
  * @return returns 0 if everything is alright, oth. for future use
  */
 int llDestroyLinkedList(node *HEAD);
+
+
+/**
+ * @fn Print the objects of the linked list for debug purposes
+ *
+ * @brief Print the name of every object of the linked list
+ * @param HEAD  only the headpointer of type node has to be passed
+ */
+void printLinkedList(node * head);
 
 #endif //FIND_SIMPLIFIED_LINKEDLISTS_H

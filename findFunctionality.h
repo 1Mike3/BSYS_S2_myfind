@@ -80,7 +80,7 @@ struct node {
  * @param parameters
  * @return
  */
-int makeDirectoryObjectsList(char readOutFileNames[FILECOUNTLIMIT][FILENAMESIZELIMIT],int maxFilenameCount,int maxFileNameSize, parameterData parameters);
+int makeDirectoryObjectsList(char readOutFileNames[FILECOUNTLIMIT][FILENAMESIZELIMIT], parameterData parameters, node * HEAD);
 /**
  * @fn Create Object Instance
  * @brief creates an Object of the passed-through path and links it together in a LL

@@ -3,7 +3,8 @@
 //
 
 #include "linkedLists.h"
-#include "stdlib.h"
+#include <stdlib.h>
+#include <stdio.h>
 
 int llLink(node *HEAD, fileSystemObject * objectToBeLinked){
 
@@ -38,5 +39,17 @@ int llDestroyLinkedList(node *HEAD) {
     free(HEAD->next);
     free(HEAD);
     return 0;
+}
+
+void printLinkedList(node * head){
+    node * tempNode = head->next;
+    int index = 0;
+    printf("###PRINT LINKED LISTS FUNCTION: \n");
+
+    while(tempNode != NULL){
+        printf("Index: [%i], Object: \t %s\n", index, tempNode->object.objectName);
+        tempNode = tempNode->next;
+        index++;
+    }
 }
 
