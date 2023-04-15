@@ -5,6 +5,7 @@
 #include "linkedLists.h"
 #include <stdlib.h>
 #include <stdio.h>
+#include "findFunctionality.h"
 
 int llLink(node *HEAD, fileSystemObject * objectToBeLinked){
 
@@ -47,7 +48,8 @@ void printLinkedList(node * head){
     printf("###PRINT LINKED LISTS FUNCTION: \n");
 
     while(tempNode != NULL){
-        printf("Index: [%i], Object: \t %s\n", index, tempNode->object.objectName);
+        //printf("Index: [%i], Object: \t %s\n", index, tempNode->object.objectName);
+        printObject(&tempNode->object);
         tempNode = tempNode->next;
         index++;
     }

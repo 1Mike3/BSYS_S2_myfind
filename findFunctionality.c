@@ -107,14 +107,16 @@ struct dirent *dd = NULL; // Directory Data
                         if (RecursiveSearchPath[0] == '\0') {
                             returnCrObjInst = createFileSystemObjectInstance(dd->d_name, currentDirPath, HEAD);
                         } else {
-                            strcpy(fullObjectName, currentDirPath);
-                            strcat(fullObjectName, pathSeparator);
-                            strcat(fullObjectName, dd->d_name);
-                            /* debug stuff
-                            printf("FULLOBJECTNAME: %s \n", fullObjectName);
-                            printf("RECURSIVESEARCHPATH: %s \n",RecursiveSearchPath);
-                            printf("CURRENTDIRPATH: %s \n", currentDirPath);
-                             */
+                            strcpy(fullObjectName, dd->d_name);
+                            /*
+                           strcpy(fullObjectName, currentDirPath);
+                           strcat(fullObjectName, pathSeparator);
+
+                           debug stuff
+                           printf("FULLOBJECTNAME: %s \n", fullObjectName);
+                           printf("RECURSIVESEARCHPATH: %s \n",RecursiveSearchPath);
+                           printf("CURRENTDIRPATH: %s \n", currentDirPath);
+                            */
                             returnCrObjInst = createFileSystemObjectInstance(fullObjectName, currentDirPath, HEAD);
                         }
                         if (returnCrObjInst == -1) {
@@ -192,8 +194,11 @@ int createFileSystemObjectInstance(char objectName[FILENAMESIZELIMIT],char curre
 
 /// initailize stat struct with object instance with selected boject
     struct stat statBuffer;
-    char pathname[FILENAMESIZELIMIT];
-    strcpy(pathname, objectName);
+    char pathname[FILENAMESIZELIMIT] = {};
+ static const char divider[] = "/";
+    strcat(pathname,currentDirPath);
+    strcat(pathname, divider);
+    strcat(pathname, objectName);
 int statReturn = stat(pathname, &statBuffer);
     if(statReturn < 0){
         fprintf(stderr, "ERROR opening stat buffer while creating object\nEID = 23455876\n");
@@ -208,7 +213,7 @@ int statReturn = stat(pathname, &statBuffer);
 
 
                     //Write object Name         ,checked
-    strcpy(objectStruct->objectName, pathname);
+    strcpy(objectStruct->objectName, objectName);
 
 
 
@@ -409,7 +414,7 @@ void printObject(fileSystemObject *object){
     printf("%s\t", object->group);
     printf("%li\t", object->fileSize_Bytes);
     printf("%s\t", object->modificationDate);
-    printf("%s\n", object->objectName); //TODO maybe change later to full object path
+    printf("%s\n", object->fullObjectPath);
 #if DEBUG_PRINT_OBJECT
     printf("## END print object function ##\n\n");
 #endif

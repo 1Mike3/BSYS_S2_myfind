@@ -100,15 +100,14 @@ int createFileSystemObjectInstance(char objectName[FILENAMESIZELIMIT],char curre
 
 
 
-//EXPIRED FUNCTION
 /**
  *@fn
  * @brief Pints all* the Information of an Object in the -ls Format
  * @param object
  */
- /*
+
 void printObject(fileSystemObject *object);
-*/
+
 
 
 #endif //FIND_SIMPLIFIED_FINDFUNCTIONALITY_H
