@@ -18,7 +18,7 @@
 #include "linkedLists.h"
 #include "helperFunctions.h"
 
-#define DEBUG_F 1
+#define DEBUG_F 0
 #define DEBUG_PRINT_OBJECT 0
 
 
@@ -98,7 +98,24 @@ struct dirent *dd = NULL; // Directory Data
                     //condition for skipping the . and .. dirs
                     if(0 != strcmp(dd->d_name, prevDir) && 0 != strcmp(dd->d_name, homeDir)){
 
-                        createFileSystemObjectInstance(dd->d_name, currentDirPath, HEAD);
+                        int returnCrObjInst; //return value of the function below
+
+                            ///CREATING OBJECT
+
+                            if(RecursiveSearchPath[0] == '\0') {
+                                returnCrObjInst = createFileSystemObjectInstance(dd->d_name, currentDirPath, HEAD);
+                            }else{
+                                char fullObjectName[MAX_PATH_LIMIT];
+                                strcat(fullObjectName, currentDirPath);
+                                strcat(fullObjectName, pathSeparator);
+                                strcat(fullObjectName, dd->d_name);
+                                returnCrObjInst = createFileSystemObjectInstance(fullObjectName, currentDirPath, HEAD);
+                            }
+                           if(returnCrObjInst == -1){
+                               fprintf(stderr,"!ERROR, createFileSystemObjectInstance Failed!\n EID = 925899\n");
+                               return -1;
+                            }
+
                     i++;
 
                     ///conditions if Object is DIRECTORY
@@ -118,7 +135,9 @@ struct dirent *dd = NULL; // Directory Data
 #endif
                     //!!! call the function again with the updated path
                         strcpy(RecursiveSearchPath, currentDirPath); //add search path to parameter so can be used on anoter function call
-                        makeDirectoryObjectsList(parameters, RecursiveSearchPath, HEAD);
+                        int returnMkdirOl = makeDirectoryObjectsList(parameters, RecursiveSearchPath, HEAD);
+                        if(returnMkdirOl == -1)
+                            return -1;
                         removeLastEntryToPath(currentDirPath);
                         removeLastEntryToPath(RecursiveSearchPath);
                     } // end if is dir statement
@@ -230,6 +249,10 @@ int createFileSystemObjectInstance(char objectName[FILENAMESIZELIMIT],char curre
             //Determine Owner Name
     //guess i'll do it with the password function
     struct passwd *pw = getpwuid(statBuffer.st_uid);
+    if(pw == NULL){
+        fprintf(stderr,"!ERROR, Determining pw Struct returned NULL!\n EID = 024968\n");
+        return -1;
+    }
     strcpy(objectStruct->owner, pw->pw_name);
 
 
