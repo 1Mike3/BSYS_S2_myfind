@@ -49,14 +49,26 @@ int llDestroyLinkedList(node *HEAD) {
     return 0;
 }
 
-void printLinkedList(node * head){
+void printLinkedList(node * head,bool flagLs, bool flagPrint){
     node * tempNode = head->next;
     int index = 0;
-    printf("###PRINT LINKED LISTS FUNCTION: \n");
+    printf("\n##### myfind output #### \n");
 
     while(tempNode != NULL){
         //printf("Index: [%i], Object: \t %s\n", index, tempNode->object.objectName);
-        printObject(&tempNode->object);
+        ///printing in ls format
+        if(flagLs == true){
+            printObjectInLsFormat(&tempNode->object);
+        }
+        ///printing in print format
+        if(flagPrint == true){
+            printf("%s\n",tempNode->object.fullObjectPath);
+        }
+        ///standard name print if no names are set
+        if(flagPrint == false && flagLs == false){
+            printf("%s\n", tempNode->object.objectName);
+        }
+
         tempNode = tempNode->next;
         index++;
     }

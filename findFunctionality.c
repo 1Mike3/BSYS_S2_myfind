@@ -414,7 +414,7 @@ static const char pathSeparator[] = "/";
 
 //#############################################################################################
 //prints object in ls format
-void printObject(fileSystemObject *object){
+void printObjectInLsFormat(fileSystemObject *object){
 #if DEBUG_PRINT_OBJECT
     printf("#### print object function ####\n");
    // printf("Filename: %s\n", object->objectName);

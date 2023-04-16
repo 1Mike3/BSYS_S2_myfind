@@ -107,7 +107,7 @@ if(parameters.expressionValid == true){
 
 
     ///Print the Output to the command line
-    printLinkedList(HEAD);
+    printLinkedList(HEAD,flagLs,flagPrint);
 
 ///Destroy the Linked List
     llDestroyLinkedList(HEAD);

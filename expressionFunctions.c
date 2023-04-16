@@ -8,7 +8,7 @@
 
 //no function for LS is necessary as it will only function as a Flag when printing the list
 //no function for print is necessary as it will only function as a Flag when printing the list
-//TODO expand print ll function to behave differently on ls and print flag
+
 
 void name(node * HEAD,char expressionParameter[MAXEXPRESSIONLENGTH]){
 

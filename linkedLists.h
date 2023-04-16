@@ -39,8 +39,12 @@ int llDestroyLinkedList(node *HEAD);
  * @fn Print the objects of the linked list for debug purposes
  *
  * @brief Print the name of every object of the linked list
+ *        Expanded to accept flags to decide how to
+ *        print depending on the ls and print parameters
  * @param HEAD  only the headpointer of type node has to be passed
- */
-void printLinkedList(node * head);
+ * @param flagLs flag which will be set to create ls output
+ * @param flagPrint flag whcih will be set to creat print output
+ * */
+void printLinkedList(node * head,bool flagLs, bool flagPrint);
 
 #endif //FIND_SIMPLIFIED_LINKEDLISTS_H

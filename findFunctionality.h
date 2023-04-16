@@ -112,7 +112,7 @@ int createFileSystemObjectInstance(char objectName[FILENAMESIZELIMIT],char curre
  * @param object
  */
 
-void printObject(fileSystemObject *object);
+void printObjectInLsFormat(fileSystemObject *object);
 
 
 
