@@ -23,6 +23,17 @@ int main(int argc, char ** argv) {
 
 
 
+    ///create HEAD POINTER for ll
+    node *HEAD = calloc(1, sizeof(node));
+
+    //for the initial call of the makedirlist function because this par is only used on recursive calls
+    char nullPathForStarters[MAX_PATH_LIMIT] = {}; //it is set to null so the initial function call can be recognized in the function
+
+    //flags for The Print function to change the Output
+    bool flagLs = false;
+    bool flagPrint = false;
+
+
     ///###########################  READ PAR AREA   ########################################
 
     //central location where the (currently processed) User Parameters are held
@@ -30,6 +41,8 @@ int main(int argc, char ** argv) {
     parameters.totalArgumentCount = (short)argc;
     parameters.totalProcessedParameters = 1; //start Value so Prog name Counted
 
+    //marker which is used so the directory list is only created once
+    bool markerCreateDirectoryList = false;
 
     // loop to read out all the Parameters
     do { //!START
@@ -41,6 +54,45 @@ int main(int argc, char ** argv) {
             printf("Program shutting down\n");
             return -1;
         }
+
+        ///making of the directory list
+       //if statement so it is definitively only called once
+        if(markerCreateDirectoryList == false){
+           if(-1 == makeDirectoryObjectsList(parameters,nullPathForStarters, HEAD)) {
+               fprintf(stderr, "ERROR makeDirectoryObjectsList function failed!\n EID = 2345896\n");
+               return -1;
+           }
+            markerCreateDirectoryList = true;
+        }
+
+
+
+///Applying of the Filters
+if(parameters.expressionValid == true){
+    ///case -ls
+    if(0 == strcmp(parameters.expression,"-ls")){
+        flagLs = true;
+    }
+    ///case -print
+    else if(0 == strcmp(parameters.expression,"-print")){
+        flagPrint = true;
+    }
+    ///case -name
+    else if(0 == strcmp(parameters.expression,"-name")){
+        name(HEAD, parameters.expressionParameter);
+    }
+    ///case -type
+    else if(0 == strcmp(parameters.expression,"-type")){
+        type(HEAD,parameters.expressionParameter);
+    }
+    ///case -user
+    else if(0 == strcmp(parameters.expression,"-user")){
+        user(HEAD,parameters.expressionParameter);
+    }
+
+}
+
+
 
 #if DEBUGM
         static int b = 1;
@@ -54,60 +106,7 @@ int main(int argc, char ** argv) {
 
 
 
-
-
-///###########################  Object Information and Linked Lists  ########################################
-
-    ///create HEAD POINTER
-    node *HEAD = calloc(1, sizeof(node));
-
-// commenting out to focus on making of the directory list
-/*
-  char filename[FILENAMESIZELIMIT] = "file1.txt";
-
-
-                              //TEST
-                                char filename2[FILENAMESIZELIMIT] = "TestDir2";
-                                char filename3[FILENAMESIZELIMIT] = "Animals";
-
-    /// create and Link Object Instance
-    createFileSystemObjectInstance(filename, HEAD);
-    printObject(&(HEAD->next->object));
-
-                            //TEST
-                            createFileSystemObjectInstance(filename2, HEAD);
-                            printObject(&(HEAD->next->object));
-
-                            createFileSystemObjectInstance(filename3, HEAD);
-                            printObject(&(HEAD->next->object));
-*/
-
-
-
-    ///###########################  Parsing Through Dir Structure   ########################################
-
-char nullPathForStarters[MAX_PATH_LIMIT] = {}; //it is set to null so the initial function call can be recognized in the function
-    makeDirectoryObjectsList(parameters,nullPathForStarters, HEAD);
-
-
-    //Print the linked list:
-    printLinkedList(HEAD);
-
-    //TEST calling the filter functions
-    /*
-    name(HEAD, "file1.txt");
-    type(HEAD, "f");
-    user(HEAD, "1000");
-     */
-
-///###########################  Helper Functions  ########################################
-
-    //NO Longer Required, for old Array system
-    //helper function to Print the names Array to the console for easier overview for me
-    //helperPrintMultidimensionalStringArray(readOutNames, FILECOUNTLIMIT, FILENAMESIZELIMIT);
-
-
-    //Print the linked list:
+    ///Print the Output to the command line
     printLinkedList(HEAD);
 
 ///Destroy the Linked List

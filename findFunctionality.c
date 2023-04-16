@@ -22,11 +22,22 @@
 #define DEBUG_PRINT_OBJECT 0
 
 
+//sorry for the long functions
 
 
 int makeDirectoryObjectsList( parameterData parameters,char RecursiveSearchPath[MAX_PATH_LIMIT], node * HEAD){
 
-
+    /*
+///Check so recursive call doesn't go too deep and cause stackoverflow:
+static short unsigned int recursionCounter = 0;
+if(recursionCounter == 10){
+    fprintf(stderr,"ERROR, makeDirectoryObjectsList was called to often\n"
+                   "directory-structure too deep, try narrowing the scope of your search\n"
+                   "EID = 1129345\n");
+    return -1;
+}
+    recursionCounter++;
+     */
     
 #if DEBUG_F
     //just wrote random garbage into array to test something
@@ -402,7 +413,7 @@ static const char pathSeparator[] = "/";
 
 
 //#############################################################################################
-
+//prints object in ls format
 void printObject(fileSystemObject *object){
 #if DEBUG_PRINT_OBJECT
     printf("#### print object function ####\n");
@@ -422,3 +433,6 @@ void printObject(fileSystemObject *object){
     printf("## END print object function ##\n\n");
 #endif
 }
+
+
+//congrats on making it to this point :insert potato:
