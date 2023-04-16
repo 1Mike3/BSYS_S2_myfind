@@ -55,3 +55,5 @@ void printLinkedList(node * head){
     }
 }
 
+//because it is a singely linked list removing a node just with the address would be hard
+//so removing node will be made custom in the other functions

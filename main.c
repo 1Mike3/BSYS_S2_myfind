@@ -7,6 +7,8 @@
 #include "inputProcessing.h"
 #include <stdlib.h>
 #include "linkedLists.h"
+#include "expressionFunctions.h"
+
 
 #define DEBUGM 0
 
@@ -87,7 +89,10 @@ char nullPathForStarters[MAX_PATH_LIMIT] = {}; //it is set to null so the initia
     makeDirectoryObjectsList(parameters,nullPathForStarters, HEAD);
 
 
+    //Print the linked list:
+    printLinkedList(HEAD);
 
+    name(HEAD, "file");
 
 
 
