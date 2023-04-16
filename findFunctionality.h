@@ -2,6 +2,8 @@
 // Created by Mike on 24/03/23.
 //
 
+
+
 #ifndef FIND_SIMPLIFIED_FINDFUNCTIONALITY_H
 #define FIND_SIMPLIFIED_FINDFUNCTIONALITY_H
 
@@ -9,12 +11,15 @@
 #define FILECOUNTLIMIT 50
 #define FILENAMESIZELIMIT 128
 
+
+
 #define PERMISSION_STRING_LENGTH 12
 #define MAX_OWNER_AND_GROUP_NAME_LENGTH 20
 #define MAX_DATE_TIME_LENGTH 30
-
+#define MAX_OWNER_ID_LENGTH 10
 #define MAX_PATH_LIMIT 257
 
+#include <sys/stat.h>
 
 /// Struct holding all the required Information of an Object in the Filesystem eg. Dir, File, Link
 typedef struct FilesystemObject {
@@ -29,6 +34,7 @@ typedef struct FilesystemObject {
     char objectName[FILENAMESIZELIMIT];
     int objectType;  //corresponding enum for easier use
     char fullObjectPath[MAX_PATH_LIMIT]; //Path from start dir
+    __UID_T_TYPE ownerID;
    // char pathFromStartDir[MAX_PATH_LIMIT]
 }fileSystemObject;
 

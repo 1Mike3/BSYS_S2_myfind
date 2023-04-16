@@ -13,7 +13,7 @@
 
 void name(node * HEAD,char expressionParameter[MAXEXPRESSIONLENGTH]);
 void type(node * HEAD,const char expressionParameter[MAXEXPRESSIONLENGTH]);
-
+void user(node * HEAD, char expressionParameter[MAXEXPRESSIONLENGTH]);
 
 
 #endif //FIND_SIMPLIFIED_EXPRESSIONFUNCTIONS_H

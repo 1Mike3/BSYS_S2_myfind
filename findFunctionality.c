@@ -4,8 +4,6 @@
 
 #include "findFunctionality.h"
 
-
-
 #include <dirent.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -17,6 +15,8 @@
 #include <grp.h>
 #include "linkedLists.h"
 #include "helperFunctions.h"
+
+
 
 #define DEBUG_F 0
 #define DEBUG_PRINT_OBJECT 0
@@ -274,6 +274,9 @@ int statReturn = stat(pathname, &statBuffer);
     }
     strcpy(objectStruct->owner, pw->pw_name);
 
+    //## new
+    //Determine Owner ID
+    objectStruct->ownerID  = statBuffer.st_uid;
 
 
             //Determine Group

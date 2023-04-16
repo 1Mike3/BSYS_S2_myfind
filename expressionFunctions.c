@@ -83,18 +83,21 @@ void type(node * HEAD,const char expressionParameter[MAXEXPRESSIONLENGTH]){
 }
 
 
-///unfinished condition
+
 void user(node * HEAD, char expressionParameter[MAXEXPRESSIONLENGTH]){
 
     if(HEAD == NULL || HEAD->next == NULL){
 
         return;
     }
+
     node *prevNode = HEAD;
     node *workingNode = HEAD->next;
+    __UID_T_TYPE comparisonValueUID;
+    char *endPtr;
     while (workingNode != NULL) {
-
-        if(0 != fnmatch(expressionParameter, workingNode->object.objectName, FNM_NOESCAPE)){
+        comparisonValueUID = strtoul(&expressionParameter[0],&endPtr,10);
+        if(0 != strcmp(workingNode->object.owner, expressionParameter) && comparisonValueUID != workingNode->object.ownerID){
             prevNode->next = workingNode->next;
             free(workingNode);
 
