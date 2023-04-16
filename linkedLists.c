@@ -31,6 +31,13 @@ int llLink(node *HEAD, fileSystemObject * objectToBeLinked){
 
 
 int llDestroyLinkedList(node *HEAD) {
+
+    //condition to abort if the list is already empty
+    if(HEAD->next == NULL){
+        free(HEAD);
+        return 1;
+    }
+
     node *tempNode;
     while (HEAD->next->next != NULL) {
         tempNode = HEAD->next->next;

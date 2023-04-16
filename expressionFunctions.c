@@ -56,7 +56,9 @@ void type(node * HEAD, char expressionParameter[MAXEXPRESSIONLENGTH]){
 
 ///unfinished condition
 void user(node * HEAD, char expressionParameter[MAXEXPRESSIONLENGTH]){
-    if(HEAD == NULL){
+
+    if(HEAD == NULL || HEAD->next == NULL){
+
         return;
     }
     node *prevNode = HEAD;

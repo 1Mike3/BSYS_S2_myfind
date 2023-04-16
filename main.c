@@ -92,7 +92,7 @@ char nullPathForStarters[MAX_PATH_LIMIT] = {}; //it is set to null so the initia
     //Print the linked list:
     printLinkedList(HEAD);
 
-    name(HEAD, "file");
+    name(HEAD, "file1.txt");
 
 
 
