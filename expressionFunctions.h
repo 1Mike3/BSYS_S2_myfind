@@ -12,6 +12,8 @@
 #include <fnmatch.h>
 
 void name(node * HEAD,char expressionParameter[MAXEXPRESSIONLENGTH]);
+void type(node * HEAD,const char expressionParameter[MAXEXPRESSIONLENGTH]);
+
 
 
 #endif //FIND_SIMPLIFIED_EXPRESSIONFUNCTIONS_H

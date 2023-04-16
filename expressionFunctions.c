@@ -32,16 +32,44 @@ if(HEAD == NULL){
 
 }
 
-///unfinished condition
-void type(node * HEAD, char expressionParameter[MAXEXPRESSIONLENGTH]){
+
+void type(node * HEAD,const char expressionParameter[MAXEXPRESSIONLENGTH]){
     if(HEAD == NULL){
         return;
     }
+
+    //determining type for comparision with expression Parameter
+    int comparisonValue;
+    switch (expressionParameter[0]) {
+        case 'b':
+            comparisonValue = T_BLOCK_DEVICE;
+            break;
+        case 'c':
+            comparisonValue = T_CHARACTER_DEVICE;
+            break;
+        case 'd':
+            comparisonValue = T_DIRECTORY;
+            break;
+        case 'p':
+            comparisonValue = T_NAMED_PIPE;
+            break;
+        case 'f':
+            comparisonValue = T_REGULAR_FILE;
+            break;
+        case 'l':
+            comparisonValue = T_SYMBOLIC_LINK;
+            break;
+        case 's':
+            comparisonValue = T_SOCKET;
+            break;
+
+    }
+
     node *prevNode = HEAD;
     node *workingNode = HEAD->next;
     while (workingNode != NULL) {
 
-        if(0 != fnmatch(expressionParameter, workingNode->object.objectName, FNM_NOESCAPE)){
+        if(workingNode->object.objectType != comparisonValue){
             prevNode->next = workingNode->next;
             free(workingNode);
 
@@ -53,6 +81,7 @@ void type(node * HEAD, char expressionParameter[MAXEXPRESSIONLENGTH]){
     }//end while
 
 }
+
 
 ///unfinished condition
 void user(node * HEAD, char expressionParameter[MAXEXPRESSIONLENGTH]){

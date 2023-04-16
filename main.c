@@ -12,6 +12,7 @@
 
 #define DEBUGM 0
 
+//TODO make static to limit the number the function can be recursively called
 
 // EXPIRED FUNCTION
 //helper for printing all objects, need to be modified for ll
@@ -92,8 +93,8 @@ char nullPathForStarters[MAX_PATH_LIMIT] = {}; //it is set to null so the initia
     //Print the linked list:
     printLinkedList(HEAD);
 
-    name(HEAD, "file1.txt");
-
+    //name(HEAD, "file1.txt");
+    type(HEAD, "s");
 
 
 ///###########################  Helper Functions  ########################################
