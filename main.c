@@ -12,7 +12,7 @@
 
 #define DEBUGM 0
 
-//TODO make static to limit the number the function can be recursively called
+//todo new error with -name option
 
 // EXPIRED FUNCTION
 //helper for printing all objects, need to be modified for ll
@@ -52,6 +52,7 @@ int main(int argc, char ** argv) {
         //Reading out of the first Parameter Data and checking if it returned an error
         if (0 > ProcessParameterData(argc, argv, &parameters)) {
             printf("Program shutting down\n");
+            free(HEAD);
             return -1;
         }
 
@@ -60,6 +61,7 @@ int main(int argc, char ** argv) {
         if(markerCreateDirectoryList == false){
            if(-1 == makeDirectoryObjectsList(parameters,nullPathForStarters, HEAD)) {
                fprintf(stderr, "ERROR makeDirectoryObjectsList function failed!\n EID = 2345896\n");
+               free(HEAD);
                return -1;
            }
             markerCreateDirectoryList = true;
