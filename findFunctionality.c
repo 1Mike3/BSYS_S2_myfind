@@ -132,7 +132,7 @@ struct dirent *dd = NULL; // Directory Data
                         }
                         if (returnCrObjInst == -1) {
                             fprintf(stderr, "!ERROR, createFileSystemObjectInstance Failed!\n EID = 925899\n");
-                            return -1;
+                            //return -1;
                         }
 
                         i++;
@@ -212,7 +212,7 @@ int createFileSystemObjectInstance(char objectName[FILENAMESIZELIMIT],char curre
     strcat(pathname, objectName);
 int statReturn = stat(pathname, &statBuffer);
     if(statReturn < 0){
-        fprintf(stderr, "ERROR opening stat buffer while creating object\nEID = 23455876\n");
+        fprintf(stderr, "ERROR opening stat buffer while creating object\nInaccessible Object will be skipped!\nEID = 23455876\n");
         return -1;
     }
 
@@ -281,6 +281,7 @@ int statReturn = stat(pathname, &statBuffer);
     struct passwd *pw = getpwuid(statBuffer.st_uid);
     if(pw == NULL){
         fprintf(stderr,"!ERROR, Determining pw Struct returned NULL!\n EID = 024968\n");
+        free(objectStruct);
         return -1;
     }
     strcpy(objectStruct->owner, pw->pw_name);
@@ -294,6 +295,7 @@ int statReturn = stat(pathname, &statBuffer);
     struct group *grp = getgrgid(statBuffer.st_gid);
     if(grp == NULL){
         fprintf(stderr, "!ERROR determining Group, groupPointer = Null!\n EID = 24356\n");
+        free(objectStruct);
         return -1;
     }
 
