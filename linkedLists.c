@@ -9,14 +9,16 @@
 
 int llLink(node *HEAD, fileSystemObject * objectToBeLinked){
 
+    static node * lastInsertedNode = NULL;
+
     /// create node Instance
     node *insertedNode = calloc(1, sizeof(node));
     insertedNode->object = *objectToBeLinked;
 
     /// case not the first element
     if(HEAD->next != NULL){
-        insertedNode->next = HEAD->next;
-        HEAD->next = insertedNode;
+        lastInsertedNode->next = insertedNode;
+        insertedNode->next = NULL;
     }
 
     /// case first Element to be linked
@@ -25,6 +27,7 @@ int llLink(node *HEAD, fileSystemObject * objectToBeLinked){
         insertedNode->next = NULL;
     }
 
+    lastInsertedNode = insertedNode;
 
     return 0;
 }
@@ -56,6 +59,13 @@ void printLinkedList(node * head,bool flagLs, bool flagPrint){
 
     while(tempNode != NULL){
         //printf("Index: [%i], Object: \t %s\n", index, tempNode->object.objectName);
+        ///Mock Object
+        //format if object is mock object for permissions Message
+        if(tempNode->object.printLackingPermissionsMessage == true){
+            printf("myfind: '%s': Permission denied\n", tempNode->object.fullObjectPath); //just like the find message i got
+            goto skipPrintingStuff; // i know labels shouldn't be used, but im to lazy at this point
+        }
+
         ///printing in ls format
         if(flagLs == true){
             printObjectInLsFormat(&tempNode->object);
@@ -68,6 +78,8 @@ void printLinkedList(node * head,bool flagLs, bool flagPrint){
         if(flagPrint == false && flagLs == false){
             printf("%s\n", tempNode->object.fullObjectPath);
         }
+
+        skipPrintingStuff:
 
         tempNode = tempNode->next;
         index++;

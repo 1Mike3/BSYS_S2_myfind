@@ -53,6 +53,8 @@ if(recursionCounter == 10){
 
 #endif
 
+    static bool createMockObject = false; //used for extra message when printing file in ls mode
+
 DIR * dir;
 struct dirent *dd = NULL; // Directory Data
         //const for excluding standard directorys
@@ -85,8 +87,9 @@ struct dirent *dd = NULL; // Directory Data
             }
 
     if (dir <= 0){
-       fprintf(stderr,"ERROR opening \"Path\" Directory!\n EID = 346745\n");
-       exit(-1);
+createMockObject = true;
+        closedir(dir);
+        return 2;
    } else{
 
         //loop to read out the data from the directory into the array
@@ -101,23 +104,33 @@ struct dirent *dd = NULL; // Directory Data
 
                 if (tempLength != 0) {
 
-                    /// CREATE LINKED LIST AREA
-                    //switch to linked list and create object, so will comment out
                     /*
-                    strcpy(readOutFileNames[i], dd->d_name); //copy to array and increase array index
-                    i++;
-                     */
+                    ///Special case, Find seems to also print . Directory so i will create an object here
+                    if(0 == strcmp(dd->d_name, homeDir)){
+                        createFileSystemObjectInstance(homeDir,currentDirPath, HEAD, &createMockObject);
+                    }
+*/
 
                     //condition for skipping the . and .. dirs
-                    if (0 != strcmp(dd->d_name, prevDir) && 0 != strcmp(dd->d_name, homeDir)) {
+                    if (0 != strcmp(dd->d_name, prevDir)  && 0 != strcmp(dd->d_name, homeDir) ) {
 
                         int returnCrObjInst; //return value of the function below
 
                         ///CREATING OBJECT
                         static char fullObjectName[MAX_PATH_LIMIT]; //path for the recursive calls of the createFilesystemObject function
                         if (RecursiveSearchPath[0] == '\0') {
-                            returnCrObjInst = createFileSystemObjectInstance(dd->d_name, currentDirPath, HEAD);
+
+                            if(createMockObject == true){ //called only to generate message that prev object could not be opened
+                                createFileSystemObjectInstance(fullObjectName,currentDirPath, HEAD, &createMockObject);
+                            }
+
+                            returnCrObjInst = createFileSystemObjectInstance(dd->d_name, currentDirPath, HEAD, &createMockObject);
                         } else {
+
+                            if(createMockObject == true){ //called only to generate message that prev object could not be opened
+                                createFileSystemObjectInstance(fullObjectName,currentDirPath, HEAD, &createMockObject);
+                            }
+
                             strcpy(fullObjectName, dd->d_name);
                             /*
                            strcpy(fullObjectName, currentDirPath);
@@ -128,7 +141,7 @@ struct dirent *dd = NULL; // Directory Data
                            printf("RECURSIVESEARCHPATH: %s \n",RecursiveSearchPath);
                            printf("CURRENTDIRPATH: %s \n", currentDirPath);
                             */
-                            returnCrObjInst = createFileSystemObjectInstance(fullObjectName, currentDirPath, HEAD);
+                            returnCrObjInst = createFileSystemObjectInstance(fullObjectName, currentDirPath, HEAD, &createMockObject);
                         }
                         if (returnCrObjInst == -1) {
                             fprintf(stderr, "!ERROR, createFileSystemObjectInstance Failed!\n EID = 925899\n");
@@ -195,12 +208,18 @@ struct dirent *dd = NULL; // Directory Data
 
 //#############################################################################################
 
-int createFileSystemObjectInstance(char objectName[FILENAMESIZELIMIT],char currentDirPath[MAX_PATH_LIMIT], node *HEAD){
+int createFileSystemObjectInstance(char objectName[FILENAMESIZELIMIT],char currentDirPath[MAX_PATH_LIMIT], node *HEAD, bool * createMockObject){
+
+
 
 
     ///initialize object struct
     fileSystemObject *objectStruct = calloc(1, sizeof(fileSystemObject));
 
+    if(*createMockObject == true){
+    objectStruct->printLackingPermissionsMessage =true;
+    *createMockObject = false;
+    }
 
 
 /// initailize stat struct with object instance with selected boject
@@ -212,8 +231,9 @@ int createFileSystemObjectInstance(char objectName[FILENAMESIZELIMIT],char curre
     strcat(pathname, objectName);
 int statReturn = stat(pathname, &statBuffer);
     if(statReturn < 0){
-        fprintf(stderr, "ERROR opening stat buffer while creating object\nInaccessible Object will be skipped!\nEID = 23455876\n");
-        return -1;
+      //  fprintf(stderr, "ERROR opening stat buffer while creating object\nInaccessible Object will be skipped!\nEID = 23455876\n");
+        free(objectStruct);
+        return 2;
     }
 
 
@@ -251,9 +271,9 @@ int statReturn = stat(pathname, &statBuffer);
     objectStruct->inodeNumber = statBuffer.st_ino;
 
 
-            //Determine number of Used Blocks               ,wrong
+            //Determine number of Used Blocks
     objectStruct->usedBlocks = statBuffer.st_blocks;
-
+    objectStruct->usedBlocks /= 2; //halved because blocksize is different
 
 
             //Determine Permission String
@@ -313,7 +333,7 @@ int statReturn = stat(pathname, &statBuffer);
 
             //objectStruct->modificationDate
             char lastModTimeString[MAX_DATE_TIME_LENGTH];
-            struct timespec timeMod = statBuffer.st_mtim;
+            struct timespec timeMod = statBuffer.st_ctim;
 
                 struct tm tm; //create struct broken down in time valuesl
                 tm  = *gmtime(&timeMod.tv_sec); //get time split into struct
@@ -356,13 +376,13 @@ int statReturn = stat(pathname, &statBuffer);
                 sprintf(dayString, "%d", day);
 
                 //shift hour offset
-                hour++; //because counts from 0 offset
+
                 char hourString[5];
-                sprintf(hourString, "%d", hour);
+                sprintf(hourString, "%02d", hour);
 
                 //minutes a
                 char minuteString[5];
-                sprintf(minuteString, "%d", min);
+                sprintf(minuteString, "%02d", min);
 
                 // colon separator
                 char separator = ':';
@@ -422,13 +442,13 @@ void printObjectInLsFormat(fileSystemObject *object){
    // printf("Filename: %s\n", object->objectName);
     printf("ObjectType: %i \n", object->objectType);
 #endif
-    printf("%li\t", object->inodeNumber);
-    printf("%li\t", object->usedBlocks);
+    printf("  %li\t", object->inodeNumber);
+    printf("%li ", object->usedBlocks);
     printf("%s\t", object->permissionString);
-    printf("%i\t", object->numberOfLinks);
+    printf("%i ", object->numberOfLinks);
     printf("%s\t", object->owner);
     printf("%s\t", object->group);
-    printf("%li\t", object->fileSize_Bytes);
+    printf("%8li ", object->fileSize_Bytes);
     printf("%s\t", object->modificationDate);
     printf("%s\n", object->fullObjectPath);
 #if DEBUG_PRINT_OBJECT

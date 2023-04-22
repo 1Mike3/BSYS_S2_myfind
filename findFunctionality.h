@@ -35,7 +35,8 @@ typedef struct FilesystemObject {
     int objectType;  //corresponding enum for easier use
     char fullObjectPath[MAX_PATH_LIMIT]; //Path from start dir
     __UID_T_TYPE ownerID;
-   // char pathFromStartDir[MAX_PATH_LIMIT]
+    bool printLackingPermissionsMessage;
+
 }fileSystemObject;
 
 
@@ -86,7 +87,7 @@ struct node {
  * @param maxFilenameCount
  * @param maxFileNameSize
  * @param parameters
- * @return
+ * @return 2 if could not get object information
  */
 int makeDirectoryObjectsList(parameterData parameters,char RecursiveSearchPath[MAX_PATH_LIMIT], node * HEAD);
 /**
@@ -98,11 +99,12 @@ int makeDirectoryObjectsList(parameterData parameters,char RecursiveSearchPath[M
  *
  * @param objectName Name of the Path that points to the Object
  * @param HEAD headpointer passed to created to
- * @return 0 if successful, -1 on Error
+ * @param createMockObject if one: problem accessing the file create a mock object prinitng an error message
+ * @return 0 if successful, -1 on Error, 2 if problem opening object and has been skipped
  */
 
 
-int createFileSystemObjectInstance(char objectName[FILENAMESIZELIMIT],char currentDirPath[MAX_PATH_LIMIT], node *HEAD);
+int createFileSystemObjectInstance(char objectName[FILENAMESIZELIMIT],char currentDirPath[MAX_PATH_LIMIT], node *HEAD, bool * createMockObject);
 
 
 
