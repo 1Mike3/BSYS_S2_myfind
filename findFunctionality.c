@@ -229,7 +229,7 @@ int createFileSystemObjectInstance(char objectName[FILENAMESIZELIMIT],char curre
     strcat(pathname,currentDirPath);
     strcat(pathname, divider);
     strcat(pathname, objectName);
-int statReturn = stat(pathname, &statBuffer);
+int statReturn = lstat(pathname, &statBuffer);
     if(statReturn < 0){
       //  fprintf(stderr, "ERROR opening stat buffer while creating object\nInaccessible Object will be skipped!\nEID = 23455876\n");
         free(objectStruct);
@@ -333,15 +333,27 @@ int statReturn = stat(pathname, &statBuffer);
 
             //objectStruct->modificationDate
             char lastModTimeString[MAX_DATE_TIME_LENGTH];
-            struct timespec timeMod = statBuffer.st_ctim;
+            struct timespec timeMod = statBuffer.st_mtim;
+
+
+
 
                 struct tm tm; //create struct broken down in time valuesl
+
+    strftime(lastModTimeString, sizeof(timeMod), "%b %d %H:%M", localtime(&timeMod.tv_sec));
+
+
+        //what a giganic waste of time, corpse of my previous attempt below
+        //(kinda works, but not really, because of the timezones)
+
+                /*
                 tm  = *gmtime(&timeMod.tv_sec); //get time split into struct
 
                 int year = tm.tm_year;
                 int day = tm.tm_mday;
                 int min = tm.tm_min;
                 int hour = tm.tm_hour;
+                 */
             /*
                 printf("TIMEPRINTTEST:::::::::\n\n");
                 printf("mon = %d\n",mon);
@@ -350,6 +362,7 @@ int statReturn = stat(pathname, &statBuffer);
                 printf("hour = %d\n", hour);
                 printf("min = %d\n\n", min);
             */
+           /*
                 //determine Month
                 char monthString[4] = {};
                 //stitchcase To write correct monthstring.
@@ -397,7 +410,7 @@ int statReturn = stat(pathname, &statBuffer);
                 strcat(lastModTimeString, ":");
                 strcat(lastModTimeString, minuteString);
 
-
+*/
 
                 // OLD WORKS BUT WRONG FORMAT strcpy(lastModTimeString,(ctime(&timeMod.tv_sec)));
                 strcpy(objectStruct->modificationDate, lastModTimeString);
